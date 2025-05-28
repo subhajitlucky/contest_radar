@@ -102,9 +102,9 @@ VITE_EMAILJS_PUBLIC_KEY=your_public_key
 
 ## 🚀 Live Demo
 
-🌐 **[View Live Demo](https://your-username.github.io/contest-radar)**
+🌐 **[View Live Demo](https://subhajitlucky.github.io/contest_radar)**
 
-*Replace with your actual deployment URL*
+Experience Contest Radar live!
 
 ## 📦 Deployment
 
@@ -119,7 +119,7 @@ npm install --save-dev gh-pages
 2. Add deployment scripts to your `package.json`:
 ```json
 {
-  "homepage": "https://your-username.github.io/contest-radar",
+  "homepage": "https://subhajitlucky.github.io/contest_radar",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
