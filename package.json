@@ -1,0 +1,31 @@
+{
+  "name": "contest-radar",
+  "version": "1.0.0",
+  "description": "A modern web application for tracking coding contests from various competitive programming platforms",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "preview": "cd client && npm run preview",
+    "install-client": "cd client && npm install",
+    "lint": "cd client && npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/contest-radar.git"
+  },
+  "keywords": [
+    "competitive-programming",
+    "contests",
+    "codeforces",
+    "leetcode",
+    "react",
+    "vite"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
