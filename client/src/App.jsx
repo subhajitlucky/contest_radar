@@ -6,19 +6,22 @@ import Home from './pages/Home';
 import Contests from './pages/Contests';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   return (
     <>
-      <Router basename="/contest_radar">
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="/contests" element={<Contests />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-          </Route>
-        </Routes>
+      <Router>
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="/contests" element={<Contests />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+            </Route>
+          </Routes>
+        </ErrorBoundary>
       </Router>
     </>
   );
