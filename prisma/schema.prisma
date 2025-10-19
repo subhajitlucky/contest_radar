@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  // Unique identifier for each user
+  id            String    @id @default(cuid())
+
+  // User's display name (optional)
+  name          String?
+
+  // User's email address (must be unique)
+  email         String    @unique
+
+  // Hashed password for email/password login (optional for OAuth users)
+  password      String?
+
+  // Timestamp when email was verified (null if not verified)
+  emailVerified DateTime?
+
+  // Profile picture URL from OAuth provider
+  image         String?
+
+  // When the user account was created
+  createdAt     DateTime  @default(now())
+
+  // When the user account was last updated
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations to other tables
+  accounts Account[]
+  sessions Session[]
+}
+
+model Account {
+  // Unique identifier for this account link
+  id                String  @id @default(cuid())
+
+  // ID of the user this account belongs to
+  userId            String
+
+  // Type of account (e.g., "oauth", "credentials")
+  type              String
+
+  // OAuth provider name (e.g., "google", "github")
+  provider          String
+
+  // Unique ID from the OAuth provider
+  providerAccountId String
+
+  // OAuth refresh token for getting new access tokens
+  refresh_token     String?
+
+  // OAuth access token for API calls
+  access_token      String?
+
+  // When the access token expires (Unix timestamp)
+  expires_at        Int?
+
+  // Type of token (usually "bearer")
+  token_type        String?
+
+  // Permissions granted by the user
+  scope             String?
+
+  // OpenID Connect ID token
+  id_token          String?
+
+  // OAuth session state
+  session_state     String?
+  
+  // Link to the User who owns this account
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Ensure each provider account is unique per user
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  // Unique identifier for this session
+  id           String   @id @default(cuid())
+
+  // Random token stored in user's browser cookie
+  sessionToken String   @unique
+
+  // ID of the user this session belongs to
+  userId       String
+
+  // When this session expires
+  expires      DateTime
+  
+  // Link to the User who owns this session
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  // Identifier (usually email) for verification
+  identifier String
+
+  // Random token sent to user for verification
+  token      String   @unique
+  
+  // When this token expires
+  expires    DateTime
+  
+  // Ensure each identifier can only have one token at a time
+  @@unique([identifier, token])
+}
