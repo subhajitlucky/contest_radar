@@ -18,11 +18,5 @@ const eslintConfig = [
       "src/generated/**",
     ],
   },
-  {
-    files: ["src/generated/prisma/**/*"],
-    rules: {
-      "@typescript-eslint/no-require-imports": "off",
-    },
-  },
 ];
 export default eslintConfig;
