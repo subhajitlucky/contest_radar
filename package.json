@@ -13,6 +13,13 @@
     "type-check": "tsc --noEmit",
     "commit": "cz",
     "commit:check": "commitlint --edit",
+    "docker:dev": "./scripts/dev.sh",
+    "docker:stop": "./scripts/stop.sh",
+    "docker:build": "docker build -t contest-radar .",
+    "docker:logs": "docker-compose logs -f",
+    "docker:shell": "docker-compose exec app sh",
+    "docker:db:shell": "docker-compose exec postgres psql -U contest_user -d contest_radar",
+    "docker:cleanup": "docker-compose down -v --remove-orphans",
     "prepare": "husky"
   },
   "dependencies": {
