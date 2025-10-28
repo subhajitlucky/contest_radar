@@ -3,8 +3,8 @@
  * Demonstrates the beautiful custom typography system
  */
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function FontShowcase() {
   const fontExamples = [
@@ -104,7 +104,7 @@ int main() {
 
       {/* Font Examples */}
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-        {fontExamples.map((font, index) => (
+        {fontExamples.map((font) => (
           <Card key={font.name} className='overflow-hidden'>
             <CardHeader className='pb-3'>
               <div className='flex items-center justify-between'>
@@ -136,7 +136,7 @@ int main() {
           </CardDescription>
         </CardHeader>
         <CardContent className='space-y-6'>
-          {codeExamples.map((example, index) => (
+          {codeExamples.map((example) => (
             <div key={example.title} className='space-y-3'>
               <div className='flex items-center gap-3'>
                 <h3 className='font-semibold'>{example.title}</h3>
@@ -179,7 +179,7 @@ int main() {
               Heading 6 - AtCoder Contests
             </h6>
             <p className='text-base font-sans'>
-              Body text - This is the standard body text that users will read throughout the platform. It's optimized for readability and accessibility.
+              Body text - This is the standard body text that users will read throughout the platform. It&apos;s optimized for readability and accessibility.
             </p>
             <p className='text-sm font-sans text-muted-foreground'>
               Small text - Secondary information and captions use smaller text for better visual hierarchy.

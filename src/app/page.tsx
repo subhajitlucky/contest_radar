@@ -1,5 +1,9 @@
-import FontShowcase from '@/components/ui/font-showcase';
+import { MainLayout, Dashboard } from '@/components/layout';
 
 export default function HomePage() {
-  return <FontShowcase />;
+  return (
+    <MainLayout>
+      <Dashboard />
+    </MainLayout>
+  );
 }

@@ -1,8 +1,7 @@
 import './globals.css';
 
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
+import { Geist, Geist_Mono, Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import { Toaster } from 'sonner';
 
 // Primary font for UI and body text
@@ -22,7 +21,7 @@ const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
   display: 'swap',
-  axes: ['wght'],
+  weight: 'variable',
 });
 
 // JetBrains Mono for coding sections
@@ -37,7 +36,7 @@ const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk',
   subsets: ['latin'],
   display: 'swap',
-  axes: ['wght'],
+  weight: 'variable',
 });
 
 export const metadata: Metadata = {
