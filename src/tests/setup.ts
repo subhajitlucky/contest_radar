@@ -6,19 +6,17 @@
 import '@testing-library/jest-dom';
 
 // Mock IntersectionObserver
-global.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
-  disconnect() {}
-  observe() {}
-  unobserve() {}
+(global as any).IntersectionObserver = class IntersectionObserver {
+  observe(): void {}
+  disconnect(): void {}
+  unobserve(): void {}
 };
 
 // Mock ResizeObserver
-global.ResizeObserver = class ResizeObserver {
-  constructor() {}
-  disconnect() {}
-  observe() {}
-  unobserve() {}
+(global as any).ResizeObserver = class ResizeObserver {
+  observe(): void {}
+  disconnect(): void {}
+  unobserve(): void {}
 };
 
 // Mock matchMedia

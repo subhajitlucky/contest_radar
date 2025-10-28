@@ -3,16 +3,17 @@
  * This component showcases all the installed shadcn/ui components
  */
 
+import { toast } from 'sonner';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { toast } from 'sonner';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function UIDemo() {
   const handleToast = () => {
@@ -113,7 +114,7 @@ export default function UIDemo() {
               <TabsTrigger value='problems'>Problems</TabsTrigger>
               <TabsTrigger value='analytics'>Analytics</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value='contests' className='space-y-4'>
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 <div className='space-y-2'>
@@ -141,13 +142,13 @@ export default function UIDemo() {
                 <Button variant='ghost'>Cancel</Button>
               </div>
             </TabsContent>
-            
+
             <TabsContent value='problems' className='space-y-4'>
               <p className='text-muted-foreground'>
                 DSA Problem collections and interactive solving environment coming soon!
               </p>
             </TabsContent>
-            
+
             <TabsContent value='analytics' className='space-y-4'>
               <p className='text-muted-foreground'>
                 Cross-platform analytics and performance insights will be available here.
