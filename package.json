@@ -37,6 +37,18 @@
     "db:seed:reset": "tsx scripts/seeds/seed-database.ts reset",
     "db:setup": "npm run db:migrate && npm run db:seed",
     "db:setup:reset": "npm run db:migrate:reset && npm run db:seed:reset",
+    
+    "Database Management": "=== DATABASE BACKUP SYSTEM ===",
+    "backup:full": "tsx scripts/backups/backup-manager.ts full",
+    "backup:schema": "tsx scripts/backups/backup-manager.ts schema", 
+    "backup:data": "tsx scripts/backups/backup-manager.ts data",
+    "backup:verify": "tsx scripts/backups/backup-manager.ts verify",
+    "backup:restore": "tsx scripts/backups/backup-manager.ts restore",
+    "backup:list": "tsx scripts/backups/backup-manager.ts list",
+    "backup:cleanup": "tsx scripts/backups/backup-manager.ts cleanup",
+    "backup:stats": "tsx scripts/backups/backup-manager.ts stats",
+    "backup:all": "npm run backup:full && npm run backup:schema && npm run backup:data",
+    
     "Prisma Management": "=== PRISMA COMMANDS ===",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
