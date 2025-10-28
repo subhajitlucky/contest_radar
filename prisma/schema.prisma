@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql" // Using PostgreSQL for local development
-  url      = "postgresql://contest_user:contest_password@localhost:5432/contest_radar?schema=public"
+  url      = env("DATABASE_URL")
 }
 
 // =================================================================
