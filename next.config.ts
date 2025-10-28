@@ -13,9 +13,10 @@ const nextConfig: NextConfig = {
     },
     // Enable Webpack build worker for faster builds
     webpackBuildWorker: true,
-    // Enable external packages for Server Components
-    serverComponentsExternalPackages: [],
   },
+  
+  // External packages for Server Components
+  serverExternalPackages: [],
   
   // Performance optimizations
   compiler: {
