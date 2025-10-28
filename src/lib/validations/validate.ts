@@ -4,7 +4,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { z, ZodSchema, ZodError } from 'zod';
+import { z, ZodError } from 'zod';
+import type { ZodSchema } from 'zod';
 import { ContestErrorResponseSchema } from '@/lib/schemas/contest';
 
 // =================================================================
@@ -109,13 +110,13 @@ export function createValidationErrorResponse(
       code,
       message: zodError ? 'Validation failed' : 'Request validation error',
       details: zodError ? {
-        fieldErrors: error.errors.reduce((acc, err) => {
+        fieldErrors: error.issues.reduce((acc, err) => {
           const path = err.path.join('.');
           if (!acc[path]) acc[path] = [];
           acc[path].push(err.message);
           return acc;
         }, {} as Record<string, string[]>),
-        formErrors: error.errors.map(err => err.message),
+        formErrors: error.issues.map(err => err.message),
       } : { message: error instanceof Error ? error.message : 'Unknown error' },
       timestamp: new Date().toISOString(),
     },
@@ -131,13 +132,11 @@ export function formatZodError(error: ZodError) {
   const fieldErrors: Record<string, string[]> = {};
   const formErrors: string[] = [];
   
-  error.errors.forEach((err) => {
+  error.issues.forEach((err) => {
     const path = err.path.join('.');
     
     if (path) {
-      if (!fieldErrors[path]) {
-        fieldErrors[path] = [];
-      }
+      if (!fieldErrors[path]) fieldErrors[path] = [];
       fieldErrors[path].push(err.message);
     } else {
       formErrors.push(err.message);
@@ -147,7 +146,7 @@ export function formatZodError(error: ZodError) {
   return {
     fieldErrors,
     formErrors,
-    issues: error.errors.map(err => ({
+    issues: error.issues.map(err => ({
       path: err.path,
       message: err.message,
       code: err.code,
@@ -164,7 +163,7 @@ export function validateResponse<T>(schema: ZodSchema<T>, data: unknown): { isVa
     return { isValid: true, data: validatedData };
   } catch (error) {
     if (error instanceof ZodError) {
-      const errorMessages = error.errors.map(err => `${err.path.join('.')}: ${err.message}`).join('; ');
+      const errorMessages = error.issues.map(err => `${err.path.join('.')}: ${err.message}`).join('; ');
       return { isValid: false, errors: errorMessages };
     }
     return { isValid: false, errors: 'Unknown validation error' };
@@ -328,7 +327,7 @@ export function validateApiErrorResponse(data: unknown): { isValid: boolean; err
   const result = ContestErrorResponseSchema.safeParse(data);
   
   if (!result.success) {
-    const errors = result.error.errors.map(err => `${err.path.join('.')}: ${err.message}`);
+    const errors = result.error.issues.map(err => `${err.path.join('.')}: ${err.message}`);
     return { isValid: false, errors };
   }
   

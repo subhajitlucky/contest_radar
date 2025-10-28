@@ -187,10 +187,13 @@ export async function getCacheStats(): Promise<any> {
     const lines = info.split('\n');
     for (const line of lines) {
       if (line.startsWith('used_memory_human:')) {
-        stats.memory_used = line.split(':')[1];
+        const parts = line.split(':');
+        stats.memory_used = parts[1] || '';
       }
       if (line.startsWith('db0:keys=')) {
-        stats.keys_count = parseInt(line.split('=')[1].split(',')[0]);
+        const parts = line.split('=');
+        const keyCount = parts[1]?.split(',')[0];
+        stats.keys_count = parseInt(keyCount || '0');
       }
     }
     

@@ -80,7 +80,7 @@ export const ContestStatisticsSchema = z.object({
   participantCount: z.number().int().nonnegative().optional(),
   maxRating: z.number().int().optional(),
   minRating: z.number().int().optional(),
-  averageScore: z.number().float().optional(),
+  averageScore: z.number().min(0).optional(),
   problemsCount: z.number().int().positive().optional(),
 }).partial();
 
@@ -120,11 +120,11 @@ export const UpdateContestSchema = ContestBaseSchema.partial().extend({
  * Contest query parameters schema
  */
 export const ContestQuerySchema = z.object({
-  page: z.string().transform((val) => parseInt(val)).pipe(
-    z.number().int().positive().default(1)
+  page: z.string().transform((val) => parseInt(val) || 1).pipe(
+    z.number().int().positive()
   ),
-  limit: z.string().transform((val) => parseInt(val)).pipe(
-    z.number().int().positive().max(100).default(10)
+  limit: z.string().transform((val) => parseInt(val) || 10).pipe(
+    z.number().int().positive().max(100)
   ),
   platform: ContestPlatformSchema.optional(),
   type: ContestTypeSchema.optional(),
@@ -173,8 +173,8 @@ export const ContestProblemSchema = z.object({
 export const ContestAnalyticsSchema = z.object({
   contestId: z.string(),
   totalParticipants: z.number().int().positive(),
-  averageScore: z.number().float(),
-  averageRank: z.number().float().optional(),
+  averageScore: z.number().min(0).optional(),
+  averageRank: z.number().min(0).optional(),
   scoreDistribution: z.record(z.string(), z.number()).optional(),
   problemDifficulty: z.record(z.string(), z.number()).optional(),
   submissionStats: z.record(z.string(), z.object({
@@ -275,7 +275,7 @@ export const ContestErrorResponseSchema = z.object({
   error: z.object({
     code: z.string(),
     message: z.string(),
-    details: z.record(z.any()).optional(),
+    details: z.record(z.string(), z.any()).optional(),
     timestamp: z.string().datetime(),
   }),
 });

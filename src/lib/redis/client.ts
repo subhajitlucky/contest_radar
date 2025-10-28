@@ -56,7 +56,6 @@ function createRedisClient(): Redis.RedisClientType {
       reconnectStrategy: redisConfig.retryStrategy,
     },
     database: redisConfig.database,
-    maxRetriesPerRequest: redisConfig.maxRetriesPerRequest,
   });
 
   // Connection event handlers
@@ -127,6 +126,40 @@ export async function checkRedisHealth(): Promise<boolean> {
   } catch (error) {
     console.error('❌ Redis health check failed:', error);
     return false;
+  }
+}
+
+/**
+ * Get Redis cache statistics
+ */
+export async function getCacheStats(): Promise<{
+  connected: boolean;
+  memory: string | null;
+  totalKeys: number;
+  uptime: number;
+}> {
+  try {
+    const [connected, memory, totalKeys, uptime] = await Promise.all([
+      redisClient.ping(),
+      redisClient.info('memory'),
+      redisClient.dbSize(),
+      redisClient.info('uptime'),
+    ]);
+
+    return {
+      connected: connected === 'PONG',
+      memory: memory,
+      totalKeys: totalKeys,
+      uptime: uptime ? parseFloat(uptime) : 0,
+    };
+  } catch (error) {
+    console.error('❌ Redis stats failed:', error);
+    return {
+      connected: false,
+      memory: null,
+      totalKeys: 0,
+      uptime: 0,
+    };
   }
 }
 

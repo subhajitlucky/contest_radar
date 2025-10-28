@@ -88,8 +88,8 @@ export async function GET(request: NextRequest) {
     }
     
     // Pagination
-    const page = parseInt(params.page);
-    const limit = parseInt(params.limit);
+    const page = parseInt(params.page || '1');
+    const limit = parseInt(params.limit || '10');
     const offset = (page - 1) * limit;
     const paginatedContests = contests.slice(offset, offset + limit);
     

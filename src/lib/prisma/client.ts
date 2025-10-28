@@ -284,7 +284,7 @@ export async function disconnectDatabases(): Promise<void> {
 
 // Query logging for development
 if (env.getBoolean('ENABLE_QUERY_LOGGING', false)) {
-  primaryDb.$on('query', (e) => {
+  primaryDb.$on('query', (e: any) => {
     console.log('🗄️ Primary DB Query:', {
       query: e.query,
       params: e.params,
@@ -292,7 +292,7 @@ if (env.getBoolean('ENABLE_QUERY_LOGGING', false)) {
     });
   });
 
-  analyticsDb.$on('query', (e) => {
+  analyticsDb.$on('query', (e: any) => {
     console.log('📊 Analytics DB Query:', {
       query: e.query,
       params: e.params,
@@ -303,7 +303,7 @@ if (env.getBoolean('ENABLE_QUERY_LOGGING', false)) {
 
 // Error logging
 [primaryDb, analyticsDb, localDb].forEach((client) => {
-  client.$on('error', (e) => {
+  client.$on('error', (e: any) => {
     console.error('🗄️ Database Error:', e);
   });
 });
