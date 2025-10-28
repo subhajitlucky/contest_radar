@@ -1,0 +1,326 @@
+// =================================================================
+// 🚀 Ultimate Contest Radar - Lean & Efficient Database Schema
+// Focused on essential data only for cost-effective local development
+// =================================================================
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql" // Using PostgreSQL for local development
+  url      = "postgresql://contest_user:contest_password@localhost:5432/contest_radar?schema=public"
+}
+
+// =================================================================
+// 👤 USER MANAGEMENT (LEAN)
+// =================================================================
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  username      String   @unique
+  firstName     String?
+  lastName      String?
+  avatar        String?
+  bio           String?
+  
+  // Essential authentication fields
+  emailVerified DateTime?
+  password      String?
+  isActive      Boolean  @default(true)
+  isVerified    Boolean  @default(false)
+  
+  // User preferences (essential only)
+  preferredLanguage String @default("en")
+  theme              String @default("system")
+  contestReminders   Boolean @default(true)
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Core relations (essential)
+  platforms     UserPlatform[]
+  registrations ContestRegistration[]
+  submissions   ProblemSubmission[]
+  notifications Notification[]
+  achievements  UserAchievement[]
+  
+  @@map("users")
+}
+
+// =================================================================
+// 🔗 PLATFORM INTEGRATIONS (ESSENTIAL)
+// =================================================================
+
+model Platform {
+  id        String   @id @default(cuid())
+  name      String   @unique // codeforces, leetcode, atcoder, codechef
+  displayName String
+  website   String
+  logo      String?
+  color     String?  // Brand color
+  
+  isActive  Boolean  @default(true)
+  apiEnabled Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Essential relations
+  contests  Contest[]
+  problems  Problem[]
+  users     UserPlatform[]
+  
+  @@map("platforms")
+}
+
+model UserPlatform {
+  id            String   @id @default(cuid())
+  userId        String
+  platformId    String
+  
+  // Essential platform data
+  platformUserId String
+  username       String
+  rating         Int?
+  maxRating      Int?
+  rank           String?
+  
+  // Basic sync settings
+  lastSyncAt     DateTime?
+  isActive       Boolean  @default(true)
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform  Platform  @relation(fields: [platformId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, platformId])
+  @@map("user_platforms")
+}
+
+// =================================================================
+// 🏆 CONTESTS (ESSENTIAL DATA)
+// =================================================================
+
+model Contest {
+  id          String   @id @default(cuid())
+  platformId  String
+  externalId  String   // Contest ID on platform
+  
+  // Essential contest info
+  name        String
+  description String?
+  type        String   // rated, unrated, practice
+  phase       String   // upcoming, coding, finished
+  
+  // Timing (essential)
+  startTime   DateTime
+  endTime     DateTime
+  duration    Int      // in minutes
+  
+  // Essential statistics
+  participantCount Int?
+  contestUrl  String?
+  
+  // Metadata (essential only)
+  tags        Json?    // Contest tags
+  isFeature   Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Essential relations
+  platform    Platform               @relation(fields: [platformId], references: [id], onDelete: Cascade)
+  problems    ContestProblem[]
+  registrations ContestRegistration[]
+  
+  @@unique([platformId, externalId])
+  @@map("contests")
+}
+
+model ContestRegistration {
+  id         String   @id @default(cuid())
+  userId     String
+  contestId  String
+  
+  // Essential registration data
+  registeredAt   DateTime @default(now())
+  participatedAt DateTime?
+  
+  // Essential results
+  rank          Int?
+  score         Int?
+  problemsSolved Int?
+  
+  // Rating changes
+  ratingChange  Int?
+  newRating     Int?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contest Contest @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, contestId])
+  @@map("contest_registrations")
+}
+
+// =================================================================
+// 🧠 DSA PROBLEMS (ESSENTIAL LEARNING DATA)
+// =================================================================
+
+model Problem {
+  id          String   @id @default(cuid())
+  platformId  String
+  externalId  String   // Problem ID on platform
+  
+  // Essential problem data
+  title       String
+  description String   @db.Text
+  difficulty  String   // easy, medium, hard
+  tags        Json     // Problem tags (essential)
+  
+  // Essential constraints
+  timeLimit   Int?     // in milliseconds
+  memoryLimit Int?     // in MB
+  
+  // Essential URLs
+  problemUrl    String?
+  editorialUrl  String?
+  
+  // Essential statistics
+  acceptanceRate Float?
+  submissionCount  Int?
+  
+  // Learning metadata (essential)
+  isPremium   Boolean  @default(false)
+  isFeatured  Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Essential relations
+  platform    Platform         @relation(fields: [platformId], references: [id], onDelete: Cascade)
+  submissions ProblemSubmission[]
+  contestProblems ContestProblem[]
+  
+  @@unique([platformId, externalId])
+  @@map("problems")
+}
+
+model ContestProblem {
+  id            String   @id @default(cuid())
+  contestId     String
+  problemId     String
+  problemNumber Int      // Order in contest (A, B, C, etc.)
+  
+  contest   Contest  @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  problem   Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  
+  @@unique([contestId, problemId])
+  @@map("contest_problems")
+}
+
+model ProblemSubmission {
+  id           String   @id @default(cuid())
+  userId       String
+  problemId    String
+  
+  // Essential submission data
+  language     String
+  code         String   @db.Text
+  status       String   // accepted, wrong_answer, time_limit, etc.
+  
+  // Performance metrics
+  executionTime Int?    // in milliseconds
+  memoryUsed   Int?     // in KB
+  
+  // Timestamp
+  submittedAt  DateTime @default(now())
+  
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  
+  @@map("problem_submissions")
+}
+
+// =================================================================
+// 🔔 NOTIFICATIONS (ESSENTIAL ALERTS)
+// =================================================================
+
+model Notification {
+  id      String   @id @default(cuid())
+  userId  String
+  
+  // Essential notification data
+  type    String   // contest_reminder, achievement, etc.
+  title   String
+  message String   @db.Text
+  
+  // Status
+  isRead  Boolean  @default(false)
+  
+  // Actions
+  actionUrl String?
+  
+  // Timestamp
+  createdAt DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("notifications")
+}
+
+// =================================================================
+// 🏅 ACHIEVEMENTS (ESSENTIAL GAMIFICATION)
+// =================================================================
+
+model Achievement {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String   @db.Text
+  category    String   // contest, problem, streak
+  
+  // Essential achievement data
+  icon        String?
+  color       String?
+  
+  // Requirements
+  requirementType String   // contests_participated, problems_solved
+  requirementValue Json    // Target value
+  
+  // Reward
+  points      Int      @default(0)
+  
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  
+  users       UserAchievement[]
+  
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id             String   @id @default(cuid())
+  userId         String
+  achievementId  String
+  
+  // Achievement progress
+  progress       Float    @default(0) // 0-1
+  isUnlocked     Boolean  @default(false)
+  unlockedAt     DateTime?
+  
+  createdAt      DateTime @default(now())
+  
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement  @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}

@@ -4,30 +4,29 @@
  * Interactive demonstration of error handling with different error types and recovery options
  */
 
-import { AnimatePresence,motion } from 'framer-motion';
-import {
-  AlertCircle,
-  AlertTriangle,
-  Bug,
-  Database,
-  Play,
-  RefreshCw,
-  Settings,
-  Wifi,
-  Zap,
-} from 'lucide-react';
 import React, { useState } from 'react';
-
-import { Badge } from '@/components/ui/badge';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  ComponentErrorBoundary,
-  PageErrorBoundary,
-  SectionErrorBoundary,
-  useErrorHandler,
-} from '@/components/ui/error-boundary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { 
+  ComponentErrorBoundary, 
+  SectionErrorBoundary, 
+  PageErrorBoundary,
+  useErrorHandler 
+} from '@/components/ui/error-boundary';
+import { 
+  AlertTriangle, 
+  RefreshCw, 
+  Wifi, 
+  Database, 
+  AlertCircle, 
+  Bug, 
+  Play,
+  Settings,
+  Zap
+} from 'lucide-react';
 
 // Demo components that will intentionally throw errors
 const ProblematicComponent: React.FC<{ errorType: string; throwError: boolean }> = ({ errorType, throwError }) => {
@@ -49,7 +48,7 @@ const NetworkErrorDemo: React.FC<{ throwError: boolean }> = ({ throwError }) => 
     // Simulate network error
     throw new Error('Failed to fetch contest data: Network connection timeout');
   }
-
+  
   return (
     <div className='p-4 border border-border rounded-lg bg-green-50 dark:bg-green-950'>
       <div className='flex items-center gap-2 mb-2'>
@@ -73,7 +72,7 @@ const DatabaseErrorDemo: React.FC<{ throwError: boolean }> = ({ throwError }) =>
     // Simulate database error
     throw new Error('Database connection failed: SQL state 08006 - Connection refused');
   }
-
+  
   return (
     <div className='p-4 border border-border rounded-lg bg-green-50 dark:bg-green-950'>
       <div className='flex items-center gap-2 mb-2'>
@@ -95,7 +94,7 @@ const ValidationErrorDemo: React.FC<{ throwError: boolean }> = ({ throwError }) 
     // Simulate validation error
     throw new Error('Invalid contest data: rating must be between 0-4000, received 5000');
   }
-
+  
   return (
     <div className='p-4 border border-border rounded-lg bg-green-50 dark:bg-green-950'>
       <div className='flex items-center gap-2 mb-2'>
@@ -119,7 +118,7 @@ const AppErrorDemo: React.FC<{ throwError: boolean }> = ({ throwError }) => {
     // Simulate generic application error
     throw new Error('Unexpected error in contest ranking algorithm: null pointer exception');
   }
-
+  
   return (
     <div className='p-4 border border-border rounded-lg bg-green-50 dark:bg-green-950'>
       <div className='flex items-center gap-2 mb-2'>
@@ -183,10 +182,10 @@ const PageLevelDemo: React.FC<{ errorType: string; throwError: boolean }> = ({ e
 };
 
 // Demo content component moved outside to avoid creation during render
-const DemoContentComponent: React.FC<{ activeDemo: string; currentErrorType: string; throwError: boolean }> = ({
-  activeDemo,
-  currentErrorType,
-  throwError,
+const DemoContentComponent: React.FC<{ activeDemo: string; currentErrorType: string; throwError: boolean }> = ({ 
+  activeDemo, 
+  currentErrorType, 
+  throwError 
 }) => {
   const commonProps = { errorType: currentErrorType, throwError };
 
@@ -214,7 +213,7 @@ export default function ErrorBoundaryDemo() {
   const [activeDemo, setActiveDemo] = useState<string>('component');
   const [throwError, setThrowError] = useState<boolean>(false);
   const [currentErrorType, setCurrentErrorType] = useState<string>('Network Error: Failed to fetch data');
-
+  
   const { handleError } = useErrorHandler();
 
   const errorTypes = [
@@ -245,19 +244,19 @@ export default function ErrorBoundaryDemo() {
         <p className='text-lg text-muted-foreground max-w-3xl mx-auto'>
           Interactive demonstration of advanced error handling with intelligent recovery options and user-friendly fallbacks.
         </p>
-
+        
         <div className='flex flex-col sm:flex-row gap-4 justify-center items-center mt-6'>
-          <Button
-            onClick={triggerError}
-            variant='destructive'
+          <Button 
+            onClick={triggerError} 
+            variant='destructive' 
             size='lg'
             className='flex items-center gap-2'
           >
             <AlertTriangle className='h-5 w-5' />
             Trigger Error
           </Button>
-
-          <Button
+          
+          <Button 
             onClick={() => handleError(new Error('Manual error from hook'))}
             variant='outline'
             className='flex items-center gap-2'
@@ -338,12 +337,12 @@ export default function ErrorBoundaryDemo() {
                 </CardHeader>
                 <CardContent>
                   <div className='space-y-4'>
-                    <DemoContentComponent
-                      activeDemo={activeDemo}
-                      currentErrorType={currentErrorType}
-                      throwError={throwError}
+                    <DemoContentComponent 
+                      activeDemo={activeDemo} 
+                      currentErrorType={currentErrorType} 
+                      throwError={throwError} 
                     />
-
+                    
                     {activeDemo !== 'component' && activeDemo !== 'section' && (
                       <div className='mt-6 p-4 bg-muted rounded-lg'>
                         <h4 className='font-semibold mb-2'>Current Error Type:</h4>
