@@ -522,10 +522,16 @@ class DatabaseBackupManager {
         failed: allMetadata.filter(b => b.status === 'failed').length,
         restored: allMetadata.filter(b => b.status === 'restored').length,
       },
-      totalSize: allMetadata.reduce((sum, b) => sum + b.size, 0),
-      averageSize: allMetadata.length > 0 ? allMetadata.reduce((sum, b) => sum + b.size, 0) / allMetadata.length : 0,
-      oldest: allMetadata.length > 0 ? allMetadata.reduce((oldest, b) => b.timestamp < oldest ? b.timestamp : oldest, allMetadata[0].timestamp) : null,
-      newest: allMetadata.length > 0 ? allMetadata.reduce((newest, b) => b.timestamp > newest ? b.timestamp : newest, allMetadata[0].timestamp) : null,
+      totalSize: allMetadata.reduce((sum, b) => sum + (b?.size || 0), 0),
+      averageSize: allMetadata.length > 0 ? allMetadata.reduce((sum, b) => sum + (b?.size || 0), 0) / allMetadata.length : 0,
+      oldest: allMetadata.length > 0 ? allMetadata.reduce((oldest, b) => {
+        const current = b?.timestamp;
+        return current && current < oldest ? current : oldest;
+      }, allMetadata[0]?.timestamp || new Date().toISOString()) : null,
+      newest: allMetadata.length > 0 ? allMetadata.reduce((newest, b) => {
+        const current = b?.timestamp;
+        return current && current > newest ? current : newest;
+      }, allMetadata[0]?.timestamp || new Date().toISOString()) : null,
       lastVerified: allMetadata.filter(b => b.verification.verifiedAt).reduce((latest, b) => {
         const verifiedAt = b.verification.verifiedAt!;
         return verifiedAt > latest ? verifiedAt : latest;
@@ -583,14 +589,14 @@ class DatabaseBackupManager {
 
   private async getDatabaseMetadata(): Promise<any> {
     try {
-      const result = await this.prisma.$queryRaw`
+      const result = await this.prisma.$queryRaw<{version: string, size: number, tables: number}[]>`
         SELECT 
-          version() as version,
-          pg_database_size(current_database()) as size,
+          (SELECT version()) as version,
+          (SELECT pg_database_size(current_database())) as size,
           (SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public') as tables
       `;
       
-      return result[0] || { version: 'unknown', size: 0, tables: 0 };
+      return result?.[0] || { version: 'unknown', size: 0, tables: 0 };
     } catch (error) {
       console.error('❌ Failed to get database metadata:', error);
       return { version: 'unknown', size: 0, tables: 0 };
@@ -790,4 +796,4 @@ if (require.main === module) {
   main();
 }
 
-export { DatabaseBackupManager, BackupMetadata, BackupConfig };
+export type { DatabaseBackupManager, BackupMetadata, BackupConfig };

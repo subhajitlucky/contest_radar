@@ -48,7 +48,7 @@ const redisConfig: RedisConfig = {
 /**
  * Create Redis client with error handling and logging
  */
-function createRedisClient(): Redis.RedisClientType {
+function createRedisClient(): any {
   const client = Redis.createClient({
     socket: {
       host: redisConfig.host,

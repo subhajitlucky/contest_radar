@@ -542,7 +542,6 @@ class DatabaseSeeder {
           requirementValue: achievement.requirementValue,
           points: achievement.points,
           isActive: achievement.isActive,
-          updatedAt: new Date(),
         },
         create: achievement,
       });
@@ -552,12 +551,14 @@ class DatabaseSeeder {
   }
 
   /**
-   * Seed system configuration
+   * Seed system configuration (commented out - model not in lean schema)
    */
   private async seedSystemConfig(): Promise<void> {
-    console.log('⚙️ Seeding system configuration...');
-
-    for (const config of seedData.systemConfig) {
+    console.log('⚙️ Skipping system configuration seeding (model not in lean schema)');
+    return;
+    
+    // Original seeding code (commented out):
+    /*for (const config of seedData.systemConfig) {
       await this.prisma.systemConfig.upsert({
         where: { key: config.key },
         update: {
@@ -565,13 +566,10 @@ class DatabaseSeeder {
           description: config.description,
           category: config.category,
           isActive: config.isActive,
-          updatedAt: new Date(),
         },
         create: config,
       });
-    }
-
-    console.log(`✅ Seeded ${seedData.systemConfig.length} system configurations`);
+    }*/
   }
 
   /**
@@ -594,7 +592,7 @@ class DatabaseSeeder {
     await this.prisma.userPlatform.deleteMany();
     await this.prisma.platform.deleteMany();
     await this.prisma.notification.deleteMany();
-    await this.prisma.systemConfig.deleteMany();
+    // await this.prisma.systemConfig.deleteMany(); // Commented out - model not in lean schema
     await this.prisma.user.deleteMany();
 
     console.log('🧹 Database cleared');
@@ -649,7 +647,11 @@ async function main() {
           process.exit(1);
         }
         console.log('⚠️ This will delete all data and reseed! Are you sure? (y/N)');
-        const input = process.stdin.readLine();
+        const input = await new Promise<string>((resolve) => {
+          process.stdin.once('data', (data) => {
+            resolve(data.toString().trim());
+          });
+        });
         if (input?.toLowerCase() === 'y') {
           await seeder.resetAndReseed();
         }
@@ -688,4 +690,4 @@ if (require.main === module) {
   main();
 }
 
-export { DatabaseSeeder, SeedData, seedData };
+export type { DatabaseSeeder, SeedData, seedData };

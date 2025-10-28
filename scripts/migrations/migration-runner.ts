@@ -122,7 +122,7 @@ ${rollback}` : '-- No rollback provided'}`;
 
     const appliedNames = appliedMigrations.map(m => m.name);
     const pending = migrationFiles.filter(file => !appliedNames.includes(file));
-    const failed = []; // TODO: Track failed migrations
+    const failed: string[] = []; // Track failed migrations
 
     return {
       applied: appliedNames,
@@ -166,10 +166,17 @@ ${rollback}` : '-- No rollback provided'}`;
     
     // Split forward and rollback SQL
     const parts = content.split('-- Rollback migration');
-    const forwardSQL = parts[0].replace(/-- Forward migration[\s\S]*?--/, '').trim();
+    if (parts.length === 0) {
+      throw new Error(`Invalid migration file format: ${filePath}`);
+    }
+    const forwardSQL = parts[0]?.replace(/-- Forward migration[\s\S]*?--/, '').trim();
     const rollbackSQL = parts[1]?.trim();
 
     console.log(`📦 Applying migration: ${fileName}`);
+
+    if (!forwardSQL) {
+      throw new Error(`No forward SQL found for migration: ${fileName}`);
+    }
 
     // Start transaction
     await this.prisma.$transaction(async (tx) => {
@@ -195,11 +202,11 @@ ${rollback}` : '-- No rollback provided'}`;
       SELECT rollback_sql FROM ${this.migrationTable} WHERE name = ${fileName};
     `;
 
-    if (result.length === 0) {
+    if (!result || result.length === 0) {
       throw new Error(`Migration not found: ${fileName}`);
     }
 
-    const rollbackSQL = result[0].rollback_sql;
+    const rollbackSQL = result[0]?.rollback_sql;
     if (!rollbackSQL) {
       throw new Error(`No rollback SQL for migration: ${fileName}`);
     }
@@ -376,7 +383,11 @@ Examples:
           process.exit(1);
         }
         console.log('⚠️ This will delete all data! Are you sure? (y/N)');
-        const input = process.stdin.readLine();
+        const input = await new Promise<string>((resolve) => {
+          process.stdin.once('data', (data) => {
+            resolve(data.toString().trim());
+          });
+        });
         if (input?.toLowerCase() === 'y') {
           await runner.resetDatabase();
         }
@@ -435,4 +446,4 @@ if (require.main === module) {
   main();
 }
 
-export { DatabaseMigrationRunner, Migration, MigrationStatus };
+export type { DatabaseMigrationRunner, Migration, MigrationStatus };
