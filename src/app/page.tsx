@@ -1,9 +1,5 @@
-import { MainLayout, Dashboard } from '@/components/layout';
+import ErrorBoundaryDemo from '@/components/ui/error-boundary-demo';
 
 export default function HomePage() {
-  return (
-    <MainLayout>
-      <Dashboard />
-    </MainLayout>
-  );
+  return <ErrorBoundaryDemo />;
 }

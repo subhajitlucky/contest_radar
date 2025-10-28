@@ -30,24 +30,8 @@ const config = {
       },
     },
     
-    // Handle custom media queries
-    'postcss-custom-media': {
-      importFrom: [
-        {
-          customMedia: {
-            '--sm': '(min-width: 640px)',
-            '--md': '(min-width: 768px)',
-            '--lg': '(min-width: 1024px)',
-            '--xl': '(min-width: 1280px)',
-            '--2xl': '(min-width: 1536px)',
-            '--motion-reduce': '(prefers-reduced-motion: reduce)',
-            '--motion-safe': '(prefers-reduced-motion: no-preference)',
-            '--color-scheme-light': '(prefers-color-scheme: light)',
-            '--color-scheme-dark': '(prefers-color-scheme: dark)',
-          },
-        },
-      ],
-    },
+    // Handle custom media queries (updated configuration)
+    'postcss-custom-media': {},
     
     // Automatically add vendor prefixes
     autoprefixer: {

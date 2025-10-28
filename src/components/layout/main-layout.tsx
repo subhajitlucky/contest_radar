@@ -3,29 +3,27 @@
  * Responsive layout system with navigation, sidebar, and content areas
  */
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Menu, 
-  X, 
-  Home, 
-  Calendar, 
-  Trophy, 
-  BookOpen, 
-  Settings, 
-  User, 
+import { AnimatePresence,motion } from 'framer-motion';
+import {
   Bell,
-  Search,
+  BookOpen,
+  Calendar,
   ChevronDown,
+  Home,
   LogOut,
+  Menu,
   Moon,
-  Sun
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+  Search,
+  Settings,
+  Sun,
+  Trophy,
+  User,
+  X } from 'lucide-react';
+import { useState } from 'react';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,6 +32,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 
 // Navigation items
 const navigationItems = [

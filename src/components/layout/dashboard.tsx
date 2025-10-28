@@ -4,21 +4,22 @@
  */
 
 import { motion } from 'framer-motion';
-import { 
-  Calendar, 
-  Trophy, 
-  Users, 
-  TrendingUp, 
-  Clock,
-  Target,
-  Zap,
+import {
+  Activity,
   Award,
+  Calendar,
+  Clock,
   Code,
-  Activity
+  Target,
+  TrendingUp,
+  Trophy,
+  Users,
+  Zap,
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 
 export default function Dashboard() {
@@ -129,7 +130,7 @@ export default function Dashboard() {
           Welcome back, Contest Master! 🎯
         </h1>
         <p className='text-muted-foreground'>
-          Here's what's happening in the competitive programming world today.
+          Here&apos;s what&apos;s happening in the competitive programming world today.
         </p>
       </div>
 
@@ -186,7 +187,7 @@ export default function Dashboard() {
                 Upcoming Contests
               </CardTitle>
               <CardDescription>
-                Don't miss these exciting contests happening soon
+                Don&apos;t miss these exciting contests happening soon
               </CardDescription>
             </CardHeader>
             <CardContent className='space-y-4'>

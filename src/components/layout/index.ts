@@ -3,5 +3,5 @@
  * Exports all layout components for easy importing
  */
 
-export { default as MainLayout } from './main-layout';
 export { default as Dashboard } from './dashboard';
+export { default as MainLayout } from './main-layout';
