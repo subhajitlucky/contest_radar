@@ -1,5 +1,5 @@
-import AnimatedDemo from '@/components/ui/animated-demo';
+import FontShowcase from '@/components/ui/font-showcase';
 
 export default function HomePage() {
-  return <AnimatedDemo />;
+  return <FontShowcase />;
 }

@@ -5,15 +5,15 @@
 
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AnimatePresence,motion } from 'framer-motion';
 import { useState } from 'react';
 import { toast } from 'sonner';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // Animation variants
 const containerVariants = {
@@ -34,7 +34,6 @@ const itemVariants = {
     opacity: 1,
     transition: {
       duration: 0.5,
-      ease: 'easeOut',
     },
   },
 };
@@ -47,7 +46,6 @@ const cardVariants = {
     rotateX: 0,
     transition: {
       duration: 0.6,
-      ease: 'easeOut',
     },
   },
   hover: {
@@ -55,7 +53,6 @@ const cardVariants = {
     y: -5,
     transition: {
       duration: 0.3,
-      ease: 'easeOut',
     },
   },
 };
@@ -67,7 +64,6 @@ const buttonVariants = {
     opacity: 1,
     transition: {
       duration: 0.3,
-      ease: 'backOut',
     },
   },
   tap: {
@@ -84,7 +80,6 @@ const progressVariants = {
     width: `${progress}%`,
     transition: {
       duration: 1.2,
-      ease: 'easeOut',
       delay: 0.5,
     },
   }),
@@ -133,7 +128,7 @@ export default function AnimatedDemo() {
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.4, type: 'spring', stiffness: 200 }}
               >
-                <Badge 
+                <Badge
                   variant={contest.status === 'live' ? 'default' : 'secondary'}
                   className={contest.status === 'live' ? 'animate-pulse' : ''}
                 >
@@ -180,10 +175,10 @@ export default function AnimatedDemo() {
               disabled={isContestStarting}
             >
               <motion.span
-                animate={{ 
+                animate={{
                   scale: isContestStarting ? [1, 1.1, 1] : 1,
                 }}
-                transition={{ 
+                transition={{
                   duration: 0.6,
                   repeat: isContestStarting ? Infinity : 0,
                   ease: 'easeInOut',
@@ -255,10 +250,12 @@ export default function AnimatedDemo() {
           <CardContent className='space-y-6'>
             {/* Platform Selector */}
             <motion.div variants={itemVariants} className='space-y-2'>
-              <label className='text-sm font-medium'>Select Platform</label>
+              <label htmlFor='platform-select' className='text-sm font-medium'>
+                Select Platform
+              </label>
               <motion.div whileFocus={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
                 <Select value={selectedPlatform} onValueChange={setSelectedPlatform}>
-                  <SelectTrigger>
+                  <SelectTrigger id='platform-select'>
                     <SelectValue placeholder='Choose your platform' />
                   </SelectTrigger>
                   <motion.div
@@ -279,9 +276,11 @@ export default function AnimatedDemo() {
 
             {/* Username Input */}
             <motion.div variants={itemVariants} className='space-y-2'>
-              <label className='text-sm font-medium'>Username</label>
+              <label htmlFor='username-input' className='text-sm font-medium'>
+                Username
+              </label>
               <motion.div whileFocus={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-                <Input placeholder='Enter your handle' />
+                <Input id='username-input' placeholder='Enter your handle' />
               </motion.div>
             </motion.div>
 
