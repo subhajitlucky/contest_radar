@@ -7,6 +7,7 @@ import TopBar from "./components/TopBar";
 import MobileNav from "./components/MobileNav";
 import { getUpcomingContests } from "@/lib/contestService";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 const instrumentSans = Instrument_Sans({
   variable: "--font-instrument-sans",
@@ -78,6 +79,7 @@ export default async function RootLayout({
           <Footer />
         </div>
         <MobileNav />
+        <Analytics />
       </body>
     </html>
   );
