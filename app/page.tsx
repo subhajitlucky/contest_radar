@@ -25,14 +25,14 @@ export default async function Home() {
 
             {/* Subtitle */}
             <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed">
-              Track upcoming Codeforces contests in real-time using their official API.
+              Track upcoming contests from Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank in real-time.
               Get timely notifications and never miss your favorite competitions.
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
               <a
-                href="/subscribe"
+                href="/alerts"
                 className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,7 +55,7 @@ export default async function Home() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t border-gray-200/60 dark:border-gray-800/60">
               <div>
                 <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                  {stats.totalContests.toLocaleString()}+
+                  {stats.totalContests.toLocaleString()}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">Contests Tracked</div>
               </div>
@@ -67,13 +67,13 @@ export default async function Home() {
               </div>
               <div>
                 <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
-                  {Math.floor(Math.random() * 10000 + 50000).toLocaleString()}+
+                  0
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Active Users</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Paywalls</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">99.9%</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Uptime</div>
+                <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">100%</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Free forever</div>
               </div>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default async function Home() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Universal Tracking</h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Track all contest types from Codeforces - Div. 1, Div. 2, Div. 3, Educational Rounds, and more.
+                Track contests across Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank in one schedule.
               </p>
             </div>
 

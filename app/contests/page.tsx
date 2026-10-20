@@ -1,34 +1,47 @@
-import { getUpcomingContests, getRelativeTime, formatContestDate, formatDuration, getContestStats } from '@/lib/contestService';
 import Link from 'next/link';
+import {
+  PLATFORM_META,
+  getGoogleCalendarUrl,
+  getUpcomingContests,
+  formatContestDate,
+  formatDuration,
+  getContestStats,
+  type PlatformKey,
+} from '@/lib/contestService';
+import Countdown from '@/app/components/Countdown';
 
-export default async function ContestsPage() {
-  // Fetch all Codeforces contests
-  const contests = await getUpcomingContests();
+const PAST_CONTESTS = [
+  {
+    id: "cf_div3_899",
+    name: "Codeforces Div. 3 #899",
+    startTime: "2026-10-18T14:35:00.000Z",
+    duration: 120,
+    type: "Div. 3",
+    difficulty: "Easy",
+  },
+  {
+    id: "cf_edu_159",
+    name: "Codeforces Educational Round #159",
+    startTime: "2026-10-16T14:35:00.000Z",
+    duration: 135,
+    type: "Educational",
+    difficulty: "Medium",
+  },
+];
+
+export default async function ContestsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ platform?: string }>;
+}) {
+  const { platform } = await searchParams;
+  const selectedPlatform =
+    platform && platform in PLATFORM_META ? (platform as PlatformKey) : null;
+  const allContests = await getUpcomingContests();
+  const contests = selectedPlatform
+    ? allContests.filter((contest) => contest.platformKey === selectedPlatform)
+    : allContests;
   const stats = await getContestStats();
-
-  // No filters needed - pure Codeforces
-  const now = new Date();
-  const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-
-  // Past contests for comparison
-  const pastContests = [
-    {
-      id: "cf_div3_899",
-      name: "Codeforces Div. 3 #899",
-      startTime: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      duration: 120,
-      type: "Div. 3",
-      difficulty: "Easy",
-    },
-    {
-      id: "cf_edu_159",
-      name: "Codeforces Educational Round #159",
-      startTime: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-      duration: 135,
-      type: "Educational",
-      difficulty: "Medium",
-    },
-  ];
 
   // Difficulty badge color helper
   function getDifficultyColor(difficulty: string | undefined): string {
@@ -45,11 +58,38 @@ export default async function ContestsPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Codeforces Contests
+            Upcoming Contests
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Real-time contest schedule from Codeforces API. Never miss a contest again.
+            Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank in one live schedule.
+            Never miss a contest again.
           </p>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          <Link
+            href="/contests"
+            className={`px-4 py-2 rounded-lg text-sm font-semibold border transition-colors ${
+              selectedPlatform === null
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400'
+            }`}
+          >
+            All
+          </Link>
+          {(Object.keys(PLATFORM_META) as PlatformKey[]).map((key) => (
+            <Link
+              key={key}
+              href={`/contests?platform=${key}`}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold border transition-colors ${
+                selectedPlatform === key
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400'
+              }`}
+            >
+              {PLATFORM_META[key].name}
+            </Link>
+          ))}
         </div>
 
         {/* Stats */}
@@ -79,14 +119,14 @@ export default async function ContestsPage() {
               <span className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></span>
               Upcoming Contests
             </h2>
-            <a
-              href="https://codeforces.com/contests"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Visit Codeforces
-            </a>
+            <div className="flex items-center gap-2">
+              <a
+                href="/api/calendar.ics"
+                className="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-semibold rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-colors"
+              >
+                Export .ics
+              </a>
+            </div>
           </div>
 
           {contests.length === 0 ? (
@@ -108,7 +148,7 @@ export default async function ContestsPage() {
                       {/* Badges */}
                       <div className="flex flex-wrap gap-2 items-center">
                         <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                          Codeforces
+                          {contest.platform}
                         </span>
                         <span className="text-xs font-bold px-2.5 py-1 rounded-full text-white bg-blue-600">
                           {contest.type}
@@ -149,7 +189,7 @@ export default async function ContestsPage() {
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          {getRelativeTime(contest.startTime)}
+                          <Countdown startTime={contest.startTime} />
                         </div>
                         {contest.phase === "CODING" && (
                           <div className="flex items-center gap-2 font-bold text-red-600 dark:text-red-400">
@@ -172,9 +212,20 @@ export default async function ContestsPage() {
                       </div>
 
                       <div className="flex gap-2 mt-auto">
-                        <button className="flex-1 inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                        <Link
+                          href="/alerts"
+                          className="flex-1 inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                        >
                           Remind
-                        </button>
+                        </Link>
+                        <a
+                          href={getGoogleCalendarUrl(contest)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center px-3 py-2 text-sm font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                        >
+                          Calendar
+                        </a>
                         <a
                           href={contest.url}
                           target="_blank"
@@ -200,7 +251,7 @@ export default async function ContestsPage() {
           </h2>
 
           <div className="space-y-3">
-            {pastContests.map((contest) => (
+            {PAST_CONTESTS.map((contest) => (
               <div
                 key={contest.id}
                 className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
@@ -241,17 +292,17 @@ export default async function ContestsPage() {
                 Missing Contests?
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                This is Codeforces official API. Gym contests require login via the website.
+                Data comes from official and normalized platform APIs.
                 <br/>
-                API updates every 5 minutes. Times are shown in your local timezone.
+                Sources refresh every 5 minutes. Times are shown in your local timezone.
               </p>
             </div>
-            <a
-              href="/subscribe"
+            <Link
+              href="/alerts"
               className="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
             >
               Get Notifications
-            </a>
+            </Link>
           </div>
         </div>
 

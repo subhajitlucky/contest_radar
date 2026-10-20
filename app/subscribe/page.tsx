@@ -96,7 +96,7 @@ export default function SubscribePage() {
         {/* Benefits Preview */}
         <div className="mt-12">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 text-center">
-            What You'll Get
+            What You&apos;ll Get
           </h2>
           <div className="grid sm:grid-cols-3 gap-4">
             <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-center">

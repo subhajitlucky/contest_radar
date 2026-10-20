@@ -16,7 +16,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-              Your go-to platform for tracking Codeforces contests in real-time using official API data.
+              Your go-to platform for tracking contests across Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank.
             </p>
             <div className="flex gap-3">
               <a
@@ -56,18 +56,25 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Data Source</h3>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a href="https://codeforces.com/api" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center gap-1">
-                  Codeforces API
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                </a>
-              </li>
-              <li>
-                <a href="https://codeforces.com/contests" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center gap-1">
-                  Problem Set
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                </a>
-              </li>
+              {[
+                { label: "Codeforces", href: "https://codeforces.com/contests" },
+                { label: "LeetCode", href: "https://leetcode.com/contest/" },
+                { label: "CodeChef", href: "https://www.codechef.com/contests" },
+                { label: "AtCoder", href: "https://atcoder.jp/contests/" },
+                { label: "HackerRank", href: "https://www.hackerrank.com/contests" },
+              ].map((platform) => (
+                <li key={platform.label}>
+                  <a
+                    href={platform.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center gap-1"
+                  >
+                    {platform.label}
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -86,13 +93,18 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/subscribe" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
-                  Notifications
+                <Link href="/alerts" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
+                  Alerts
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
                   About
+                </Link>
+              </li>
+              <li>
+                <Link href="/support" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
+                  Support
                 </Link>
               </li>
             </ul>

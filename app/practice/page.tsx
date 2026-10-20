@@ -475,8 +475,8 @@ export default function PracticePage() {
         {/* Note */}
         <div className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
           <p>
-            <strong>Note:</strong> These resources redirect to external platforms. We're providing curated links to help
-            you practice efficiently. ContestRadar doesn't host problems or judge submissions.
+            <strong>Note:</strong> These resources redirect to external platforms. We&apos;re providing curated links to help
+            you practice efficiently. ContestRadar doesn&apos;t host problems or judge submissions.
           </p>
         </div>
 

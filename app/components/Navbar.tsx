@@ -37,15 +37,21 @@ export default function Navbar() {
             >
               About
             </Link>
+            <Link
+              href="/support"
+              className="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
+            >
+              Support
+            </Link>
           </div>
 
           {/* Right Actions */}
           <div className="flex items-center gap-3">
             <Link
-              href="/subscribe"
+              href="/alerts"
               className="hidden sm:inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all hover:scale-105"
             >
-              Subscribe
+              Alerts
             </Link>
 
             {/* Mobile Menu Button (simplified) */}

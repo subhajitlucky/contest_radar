@@ -15,13 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ContestRadar - Track Codeforces Contests",
-  description: "Real-time tracking of upcoming Codeforces contests. Get timely notifications and never miss your favorite competitions.",
-  keywords: ["coding contests", "competitive programming", "Codeforces", "contest tracker", "div 1", "div 2", "div 3", "educational round"],
+  title: "ContestRadar - Track Coding Contests",
+  description: "Real-time tracking of upcoming contests from Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank.",
+  keywords: ["coding contests", "competitive programming", "Codeforces", "LeetCode", "CodeChef", "AtCoder", "HackerRank", "contest tracker"],
   authors: [{ name: "ContestRadar" }],
   openGraph: {
-    title: "ContestRadar - Track Codeforces Contests",
-    description: "Real-time Codeforces contest tracking with official API data",
+    title: "ContestRadar - Track Coding Contests",
+    description: "Real-time multi-platform contest tracking from official and normalized APIs",
     type: "website",
   },
 };

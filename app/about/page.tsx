@@ -11,7 +11,7 @@ export default function AboutPage() {
             About Contest<span className="text-blue-600 dark:text-blue-400">Radar</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            The Codeforces contest tracker with real-time API data, notifications, and analytics.
+The multi-platform contest tracker with real-time API data, alerts, and analytics.
           </p>
         </div>
 
@@ -25,9 +25,9 @@ export default function AboutPage() {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Our Mission</h2>
             </div>
             <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-              At ContestRadar, we believe every competitive programmer deserves to stay informed about Codeforces contests
-              in real-time without checking multiple sites. We use the official Codeforces API to provide accurate, up-to-date
-              contest information with intelligent notifications and reminders.
+              At ContestRadar, we believe every competitive programmer deserves to stay informed about contests
+              in real-time without checking multiple sites. We normalize official and public platform data from
+              Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank into one schedule.
             </p>
           </div>
         </div>
@@ -43,7 +43,7 @@ export default function AboutPage() {
             />
             <FeatureCard
               icon="📊"
-              title="Codeforces Analytics"
+              title="Multi-platform Analytics"
               description="View statistics about upcoming contests, active contests, and trends"
             />
             <FeatureCard
@@ -61,13 +61,37 @@ export default function AboutPage() {
 
         {/* Supported Platforms */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Data Source</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Data Sources</h2>
           <div className="space-y-4">
             <PlatformCard
               name="Codeforces API"
-              description="Real-time data from official API - Div. 1, Div. 2, Div. 3, Div. 4, Educational Rounds, and more"
+              description="Div. 1, Div. 2, Div. 3, Div. 4, Educational Rounds, and more"
               Link="codeforces.com/api"
               color="blue"
+            />
+            <PlatformCard
+              name="LeetCode GraphQL"
+              description="Weekly and biweekly contests"
+              Link="leetcode.com/graphql"
+              color="orange"
+            />
+            <PlatformCard
+              name="CodeChef"
+              description="Starters and other scheduled contests"
+              Link="codechef.com"
+              color="red"
+            />
+            <PlatformCard
+              name="AtCoder"
+              description="ABC, ARC, AGC, and other contests"
+              Link="atcoder.jp"
+              color="blue"
+            />
+            <PlatformCard
+              name="HackerRank"
+              description="Rated and hiring contests"
+              Link="hackerrank.com"
+              color="orange"
             />
           </div>
         </div>
@@ -77,12 +101,12 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">About the Team</h2>
           <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-              ContestRadar is built by competitive programmers, for competitive programmers. We're a passionate team
+              ContestRadar is built by competitive programmers, for competitive programmers. We&apos;re a passionate team
               who understands the challenges of staying updated with the rapidly growing competitive programming ecosystem.
             </p>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
               Our goal is to make this platform free and accessible to everyone in the competitive programming community.
-              Whether you're a beginner just starting your journey or a seasoned competitor, we're here to help you
+              Whether you&apos;re a beginner just starting your journey or a seasoned competitor, we&apos;re here to help you
               never miss a contest.
             </p>
           </div>
@@ -98,7 +122,7 @@ export default function AboutPage() {
                 <span className="float-right group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-6 pb-4 text-gray-700 dark:text-gray-300">
-                Yes! ContestRadar is 100% free to use. We may introduce premium features in the future, but core functionality will always remain free.
+                Yes. Contest discovery, alerts, and calendar features stay free. Donations only cover infrastructure, never feature access.
               </div>
             </details>
 
@@ -108,27 +132,27 @@ export default function AboutPage() {
                 <span className="float-right group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-6 pb-4 text-gray-700 dark:text-gray-300">
-                We use the official Codeforces API, which updates in real-time. Usually updates appear within minutes of official announcements.
+                We combine official and normalized platform APIs, refreshed every five minutes. Usually updates appear within minutes of official announcements.
               </div>
             </details>
 
             <details className="group bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
               <summary className="px-6 py-4 cursor-pointer font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                Does ContestRadar support other platforms besides Codeforces?
+                Does ContestRadar support other platforms?
                 <span className="float-right group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-6 pb-4 text-gray-700 dark:text-gray-300">
-                We focus exclusively on Codeforces. Other platforms like AtCoder and LeetCode don't have reliable public APIs for contest tracking.
+                Yes: Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank are live in one schedule.
               </div>
             </details>
 
             <details className="group bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
               <summary className="px-6 py-4 cursor-pointer font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                What does "remind me" feature do?
+                What does the remind me button do?
                 <span className="float-right group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-6 pb-4 text-gray-700 dark:text-gray-300">
-                When you click "Remind Me" on a contest, you'll be prompted to subscribe. You can configure alerts at specific times before contests start (1h, 30min, etc.).
+                The Remind button opens the alerts page. Telegram reminders work today; email alerts work when the server database and email provider are configured.
               </div>
             </details>
           </div>
@@ -142,7 +166,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="text-2xl font-bold mb-2">Have Questions?</h3>
                 <p className="text-blue-100 mb-4">
-                  We'd love to hear from you. Whether you have suggestions, bug reports, or just want to say hello!
+                  We&apos;d love to hear from you. Whether you have suggestions, bug reports, or just want to say hello!
                 </p>
                 <div className="flex gap-3">
                   <a href="mailto:contact@contestradar.com" className="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors">
