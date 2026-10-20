@@ -75,7 +75,7 @@ export default async function RootLayout({
         <EmbedMode />
         <CommandPalette />
         <Sidebar nextContest={nextContest} />
-        <div className="app-main-wrap flex min-h-screen flex-col lg:pl-[260px]">
+        <div className="app-main-wrap flex min-h-screen flex-col lg:pl-[276px]">
           <TopBar />
           <main className="app-main flex-1 pb-20 lg:pb-0">{children}</main>
           <Footer />

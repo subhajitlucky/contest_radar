@@ -5,64 +5,49 @@ import { PLATFORM_META, type PlatformKey } from "@/lib/contestService";
 const PRODUCT = [
   { href: "/contests", label: "All contests" },
   { href: "/alerts", label: "Alerts" },
-  { href: "/practice", label: "Practice" },
   { href: "/virtual", label: "Virtual contest" },
-  { href: "/profile", label: "Profile" },
+  { href: "/practice", label: "Practice" },
   { href: "/leaderboard", label: "Leaderboard" },
+  { href: "/profile", label: "Profile" },
+];
+
+const PROJECT = [
   { href: "/developers", label: "Developers" },
-  { href: "/support", label: "Support" },
   { href: "/about", label: "About" },
+  { href: "/support", label: "Support" },
   { href: "/privacy", label: "Privacy" },
 ];
 
 export default function Footer() {
   return (
     <footer className="app-footer mt-12 border-t border-line">
-      <div className="shell py-14 pb-24 lg:pb-14">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
+      <div className="shell py-12 pb-24 lg:pb-12">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr] lg:gap-12">
           <div>
-            <p className="mono text-[10px] uppercase tracking-[0.22em] text-muted">ContestRadar</p>
-            <p className="display mt-4 max-w-md text-4xl font-bold leading-[0.95] tracking-tight">
-              Never miss the <span className="serif-accent text-signal">next round</span>.
+            <p className="text-base font-semibold tracking-tight">ContestRadar</p>
+            <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted">
+              A free, multi-platform contest schedule for competitive programmers. No
+              paywalls, no sponsored rankings, no noise.
             </p>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
-              A free, multi-platform contest radar for competitive programmers. No paywalls,
-              no sponsored rankings, no noise.
+            <p className="mono mt-4 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-muted">
+              <span className="h-1.5 w-1.5 rounded-full bg-signal" aria-hidden="true" />
+              Free forever · {new Date().getFullYear()}
             </p>
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-signal shadow-[0_0_10px_var(--signal)]" />
-              <span className="mono text-[10px] uppercase tracking-wider text-muted">
-                Free forever · {new Date().getFullYear()}
-              </span>
-            </div>
           </div>
 
-          <div>
-            <h2 className="eyebrow">Product</h2>
-            <ul className="mt-4 space-y-2.5 text-sm">
-              {PRODUCT.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="inline-flex items-center gap-1 text-muted transition-colors hover:text-foreground"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterColumn title="Product" links={PRODUCT} />
+          <FooterColumn title="Project" links={PROJECT} />
 
           <div>
-            <h2 className="eyebrow">Platforms</h2>
-            <ul className="mt-4 space-y-2.5 text-sm">
+            <h2 className="mono text-[11px] uppercase tracking-[0.14em] text-muted">Platforms</h2>
+            <ul className="mt-3 space-y-2">
               {(Object.keys(PLATFORM_META) as PlatformKey[]).map((key) => (
                 <li key={key}>
                   <Link
                     href={`/contests?platform=${key}`}
-                    className="inline-flex items-center gap-2 text-muted transition-colors hover:text-foreground"
+                    className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-ink"
                   >
-                    <span className="platform-dot" data-platform={key} />
+                    <span className="platform-dot" data-platform={key} aria-hidden="true" />
                     {PLATFORM_META[key].name}
                   </Link>
                 </li>
@@ -72,7 +57,7 @@ export default function Footer() {
               href="https://github.com/subhajitlucky/contest_radar"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-muted transition-colors hover:text-foreground"
+              className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-muted transition-colors hover:text-ink"
             >
               Source on GitHub
               <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -80,11 +65,37 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-line/70 pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>Built for competitive programmers. Data from official and normalized platform APIs.</p>
-          <p className="mono text-[10px] uppercase tracking-wider">Signal over noise</p>
+        <div className="mt-10 flex flex-col gap-2 border-t border-line pt-5 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p>Data from official and normalized platform APIs.</p>
+          <p className="mono text-[10px] uppercase tracking-[0.14em]">Signal over noise</p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: Array<{ href: string; label: string }>;
+}) {
+  return (
+    <div>
+      <h2 className="mono text-[11px] uppercase tracking-[0.14em] text-muted">{title}</h2>
+      <ul className="mt-3 space-y-2">
+        {links.map((link) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className="text-sm text-muted transition-colors hover:text-ink"
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

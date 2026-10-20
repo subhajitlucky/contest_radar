@@ -130,6 +130,16 @@ export default async function Home() {
                 </Link>
               </div>
             )}
+
+            <div className="mt-4 border-t border-line pt-3">
+              <Link
+                href="/alerts"
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-muted transition-colors hover:text-ink"
+              >
+                Set alerts for these rounds
+                <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+              </Link>
+            </div>
           </section>
         </div>
 
