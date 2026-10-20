@@ -1,7 +1,7 @@
 # Contest Radar — What Remains
 
-Status snapshot: **19 of 20 planned features implemented**, with extension publication
-(P20) remaining.
+Status snapshot: **19 of 20 planned features implemented**. The extension is ready to
+publish (icons, store copy, privacy policy), pending a Chrome Web Store submission.
 
 ## Shipped
 

@@ -12,6 +12,7 @@ const PRODUCT = [
   { href: "/developers", label: "Developers" },
   { href: "/support", label: "Support" },
   { href: "/about", label: "About" },
+  { href: "/privacy", label: "Privacy" },
 ];
 
 export default function Footer() {
