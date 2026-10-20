@@ -5,6 +5,7 @@ import CommandPalette from "./components/CommandPalette";
 import Sidebar from "./components/Sidebar";
 import TopBar from "./components/TopBar";
 import MobileNav from "./components/MobileNav";
+import EmbedMode from "./components/EmbedMode";
 import { getUpcomingContests } from "@/lib/contestService";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
@@ -71,11 +72,12 @@ export default async function RootLayout({
         className={`${instrumentSans.variable} ${plexMono.variable} min-h-screen antialiased`}
       >
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+        <EmbedMode />
         <CommandPalette />
         <Sidebar nextContest={nextContest} />
-        <div className="flex min-h-screen flex-col lg:pl-[260px]">
+        <div className="app-main-wrap flex min-h-screen flex-col lg:pl-[260px]">
           <TopBar />
-          <main className="flex-1 pb-20 lg:pb-0">{children}</main>
+          <main className="app-main flex-1 pb-20 lg:pb-0">{children}</main>
           <Footer />
         </div>
         <MobileNav />

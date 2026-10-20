@@ -1,7 +1,7 @@
 # Contest Radar — What Remains
 
-Status snapshot: **14 of 20 planned features complete**, plus two partials:
-account-backed favorites sync (alert settings not yet linked) and an unpublished extension.
+Status snapshot: **19 of 20 planned features implemented**, with extension publication
+(P20) remaining.
 
 ## Shipped
 
@@ -16,6 +16,9 @@ account-backed favorites sync (alert settings not yet linked) and an unpublished
 - Telegram and Discord alerts.
 - Browser push subscriptions with a service worker and cron delivery.
 - Passwordless email accounts, HttpOnly sessions, and favorites sync at `/login` and `/profile`.
+- Account-linked alert subscriptions for email, Discord, and push.
+- Codeforces handle linking, stored rating history, and six-hour rating refresh cron.
+- Weekly contest streaks and an opt-in rating/streak leaderboard at `/leaderboard`.
 - Codeforces rating profile at `/profile` with rating chart and recent results.
 - Post-contest results/standings links.
 - Rating-based practice recommendations into CSCosmos.
@@ -24,11 +27,6 @@ account-backed favorites sync (alert settings not yet linked) and an unpublished
 
 | ID | Feature | Priority | Depends on | Notes |
 | :--- | :--- | :--- | :--- | :--- |
-| F09 | Account-linked alert settings | P0 for retention | Existing auth | Link alert subscriptions to user IDs so settings sync across devices. |
-| F12 | Participation streaks | P2 | F11 | Weekly contest streak and calendar heatmap. |
-| F17 | Leaderboards + college boards | P2 | F09, F11 | Opt-in aggregation and anti-gaming rules. |
-| F16 | Mock / virtual contests | P2 | Judge or external submission | Timer, scoring, history; highest-cost feature. |
-| F19 | Embeddable calendar widget | P1 | Standalone embed layout | Needs a shell bypass or route-group split. |
 | F20 | Extension polish and publish | P2 | Chrome Web Store account | Icons, store assets, privacy text, publishing. |
 
 ## Platform improvements
@@ -45,10 +43,10 @@ account-backed favorites sync (alert settings not yet linked) and an unpublished
 
 ## Critical path
 
-1. **Account-linked settings** (F09 remainder) unlocks alert sync and leaderboards.
-2. **Streaks** (F12) need stored rating history; add a per-user history table during ingestion.
-3. **Embed layout** (F19) and **mock contests** (F16) are separate tracks; do not block core alerts.
+1. **Extension publish** (F20) needs icons, store assets, privacy copy, and a Chrome Web
+   Store account.
+2. Optional depth: judged mock contests, college leaderboards, server-side contest history.
 
 ## Next batch
 
-F09 remainder → F12 → F17, then F19, then F16.
+F20 publish.

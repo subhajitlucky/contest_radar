@@ -12,6 +12,8 @@ import {
   Info,
   LayoutDashboard,
   LifeBuoy,
+  TimerReset,
+  Trophy,
   UserRound,
 } from "lucide-react";
 import { PLATFORM_META, type Contest, type PlatformKey } from "@/lib/contestService";
@@ -23,7 +25,9 @@ const MAIN = [
   { href: "/contests", label: "Schedule", icon: CalendarDays },
   { href: "/alerts", label: "Alerts", icon: Bell },
   { href: "/practice", label: "Practice", icon: BookOpen },
+  { href: "/virtual", label: "Virtual contest", icon: TimerReset },
   { href: "/profile", label: "Profile", icon: UserRound },
+  { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
 ];
 
 const PROJECT = [
@@ -41,7 +45,7 @@ export default function Sidebar({ nextContest }: { nextContest: Contest | null }
     href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-[260px] flex-col border-r border-line bg-panel lg:flex">
+    <aside className="app-sidebar fixed inset-y-0 left-0 z-40 hidden w-[260px] flex-col border-r border-line bg-panel lg:flex">
       <div className="flex h-16 items-center border-b border-line px-5">
         <Link href="/" className="flex items-center gap-3">
           <span className="flex h-7 w-7 items-center justify-center border border-ink">

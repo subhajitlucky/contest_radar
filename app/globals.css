@@ -349,3 +349,18 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+[data-embed="true"] .app-sidebar,
+[data-embed="true"] .app-topbar,
+[data-embed="true"] .app-footer,
+[data-embed="true"] .app-mobile-nav {
+  display: none !important;
+}
+
+[data-embed="true"] .app-main-wrap {
+  padding-left: 0 !important;
+}
+
+[data-embed="true"] .app-main {
+  padding-bottom: 0 !important;
+}

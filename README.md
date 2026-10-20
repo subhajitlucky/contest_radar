@@ -109,6 +109,16 @@ and Resend configuration.
 - `/api/auth/verify` creates an HttpOnly session cookie.
 - `/api/user/favorites` syncs the local Saved list when signed in.
 - Sessions expire after 30 days; sign out from `/profile`.
+- Link a Codeforces handle from `/profile` to store rating history, weekly streaks, and
+  optionally join `/leaderboard`.
+- `/api/ratings/refresh` refreshes linked handles; run it from the ratings GitHub Action
+  every six hours.
+
+## Embeds and virtual contests
+
+- Embed the compact calendar at `/embed/calendar` (query: `platform`, `theme`).
+- Run a timed virtual contest over a past Codeforces round at `/virtual`. Sessions are
+  stored locally; ContestRadar does not judge submissions.
 
 ## Telegram setup
 

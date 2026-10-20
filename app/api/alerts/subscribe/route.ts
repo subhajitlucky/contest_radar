@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { getPool, isDatabaseConfigured } from "@/lib/db";
+import { getSessionUser } from "@/lib/auth";
 import {
   isValidEmail,
   normalizeLeadMinutes,
@@ -49,6 +50,7 @@ export async function POST(request: NextRequest) {
   const confirmToken = randomUUID();
   const unsubscribeToken = randomUUID();
   const pool = getPool();
+  const user = await getSessionUser();
 
   const existing = await pool.query<{ confirmed: boolean }>(
     "SELECT confirmed FROM alert_subscriptions WHERE channel = 'email' AND destination = $1",
@@ -58,14 +60,15 @@ export async function POST(request: NextRequest) {
 
   await pool.query(
     `INSERT INTO alert_subscriptions
-       (channel, destination, platforms, lead_minutes, confirmed, confirm_token, unsubscribe_token)
-     VALUES ('email', $1, $2, $3, FALSE, $4, $5)
+       (channel, destination, platforms, lead_minutes, confirmed, confirm_token, unsubscribe_token, user_id)
+     VALUES ('email', $1, $2, $3, FALSE, $4, $5, $6)
      ON CONFLICT (channel, destination) DO UPDATE SET
        platforms = EXCLUDED.platforms,
        lead_minutes = EXCLUDED.lead_minutes,
        confirm_token = EXCLUDED.confirm_token,
-       unsubscribe_token = EXCLUDED.unsubscribe_token`,
-    [email, platforms, leadMinutes, confirmToken, unsubscribeToken]
+       unsubscribe_token = EXCLUDED.unsubscribe_token,
+       user_id = COALESCE(EXCLUDED.user_id, alert_subscriptions.user_id)`,
+    [email, platforms, leadMinutes, confirmToken, unsubscribeToken, user?.id ?? null]
   );
 
   const base = siteUrl(request.url);

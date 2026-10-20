@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPool, isDatabaseConfigured } from "@/lib/db";
+import { getSessionUser } from "@/lib/auth";
 import { normalizeLeadMinutes, normalizePlatforms } from "@/lib/alerts";
 
 export const dynamic = "force-dynamic";
@@ -57,17 +58,19 @@ export async function POST(request: NextRequest) {
 
   const platforms = normalizePlatforms(payload.platforms);
   const leadMinutes = normalizeLeadMinutes(payload.leadMinutes);
+  const user = await getSessionUser();
 
   await getPool().query(
     `INSERT INTO push_subscriptions
-       (endpoint, p256dh, auth, platforms, lead_minutes)
-     VALUES ($1, $2, $3, $4, $5)
+       (endpoint, p256dh, auth, platforms, lead_minutes, user_id)
+     VALUES ($1, $2, $3, $4, $5, $6)
      ON CONFLICT (endpoint) DO UPDATE SET
        p256dh = EXCLUDED.p256dh,
        auth = EXCLUDED.auth,
        platforms = EXCLUDED.platforms,
-       lead_minutes = EXCLUDED.lead_minutes`,
-    [endpoint, p256dh, auth, platforms, leadMinutes]
+       lead_minutes = EXCLUDED.lead_minutes,
+       user_id = COALESCE(EXCLUDED.user_id, push_subscriptions.user_id)`,
+    [endpoint, p256dh, auth, platforms, leadMinutes, user?.id ?? null]
   );
 
   return NextResponse.json({ ok: true, message: "Browser push enabled." });

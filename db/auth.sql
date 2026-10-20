@@ -34,3 +34,27 @@ CREATE TABLE IF NOT EXISTS user_favorites (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   PRIMARY KEY (user_id, contest_key)
 );
+
+
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS cf_handle TEXT;
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS cf_rating INTEGER;
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS leaderboard_opt_in BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS cf_synced_at TIMESTAMPTZ;
+
+CREATE TABLE IF NOT EXISTS user_contest_history (
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  contest_id BIGINT NOT NULL,
+  contest_name TEXT NOT NULL,
+  rank INTEGER NOT NULL,
+  old_rating INTEGER NOT NULL,
+  new_rating INTEGER NOT NULL,
+  timestamp BIGINT NOT NULL,
+  PRIMARY KEY (user_id, contest_id)
+);
+
+CREATE INDEX IF NOT EXISTS user_contest_history_time_idx
+  ON user_contest_history (timestamp);

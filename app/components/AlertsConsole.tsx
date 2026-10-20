@@ -239,6 +239,13 @@ export default function AlertsConsole({ botUsername }: { botUsername?: string })
                 </a>
               ))}
             </div>
+
+            <div className="mt-5 rounded-md border border-line bg-panel-2 p-3">
+              <p className="eyebrow">Embed this calendar</p>
+              <code className="mt-2 block break-all font-mono text-[10px] leading-relaxed text-muted">
+                {`<iframe src="https://contestradar.vercel.app/embed/calendar?platform=codeforces" width="380" height="520" title="ContestRadar calendar"></iframe>`}
+              </code>
+            </div>
           </section>
         )}
       </div>

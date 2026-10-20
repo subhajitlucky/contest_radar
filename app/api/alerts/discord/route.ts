@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { getPool, isDatabaseConfigured } from "@/lib/db";
+import { getSessionUser } from "@/lib/auth";
 import { normalizeLeadMinutes, normalizePlatforms } from "@/lib/alerts";
 
 export const dynamic = "force-dynamic";
@@ -47,17 +48,19 @@ export async function POST(request: NextRequest) {
 
   const platforms = normalizePlatforms(payload.platforms);
   const leadMinutes = normalizeLeadMinutes(payload.leadMinutes);
+  const user = await getSessionUser();
 
   await getPool().query(
     `INSERT INTO alert_subscriptions
-       (channel, destination, platforms, lead_minutes, confirmed, unsubscribe_token)
-     VALUES ('discord', $1, $2, $3, TRUE, $4)
+       (channel, destination, platforms, lead_minutes, confirmed, unsubscribe_token, user_id)
+     VALUES ('discord', $1, $2, $3, TRUE, $4, $5)
      ON CONFLICT (channel, destination) DO UPDATE SET
        platforms = EXCLUDED.platforms,
        lead_minutes = EXCLUDED.lead_minutes,
        confirmed = TRUE,
-       unsubscribe_token = EXCLUDED.unsubscribe_token`,
-    [webhookUrl, platforms, leadMinutes, randomUUID()]
+       unsubscribe_token = EXCLUDED.unsubscribe_token,
+       user_id = COALESCE(EXCLUDED.user_id, alert_subscriptions.user_id)`,
+    [webhookUrl, platforms, leadMinutes, randomUUID(), user?.id ?? null]
   );
 
   return NextResponse.json({ ok: true, message: "Discord reminders enabled." });

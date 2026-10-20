@@ -747,3 +747,50 @@ export async function getGymContests(): Promise<Contest[]> {
     return [];
   }
 }
+
+export async function getPastContests(limit = 30): Promise<Contest[]> {
+  try {
+    const response = await fetch("https://codeforces.com/api/contest.list?gym=false", {
+      next: { revalidate: 3600 },
+      headers: { "User-Agent": "ContestRadar/1.0" },
+    });
+
+    if (!response.ok) throw new Error(`Codeforces HTTP ${response.status}`);
+    const data = await response.json();
+    if (data.status !== "OK") throw new Error("Codeforces API error");
+
+    return (data.result as CodeforcesContestAPI[])
+      .filter(
+        (contest) =>
+          contest.phase === "FINISHED" &&
+          Boolean(contest.startTimeSeconds) &&
+          contest.durationSeconds > 0
+      )
+      .sort((a, b) => (b.startTimeSeconds ?? 0) - (a.startTimeSeconds ?? 0))
+      .slice(0, limit)
+      .map((contest): Contest => {
+        const start = new Date((contest.startTimeSeconds ?? 0) * 1000);
+        const end = new Date(start.getTime() + contest.durationSeconds * 1000);
+        const type = codeforcesType(contest);
+
+        return {
+          id: contest.id,
+          name: contest.name,
+          platform: "Codeforces",
+          platformKey: "codeforces",
+          startTime: start.toISOString(),
+          endTime: end.toISOString(),
+          duration: Math.round(contest.durationSeconds / 60),
+          type,
+          difficulty: difficultyMap[type] || "Unknown",
+          description: codeforcesDescription(type),
+          url: `https://codeforces.com/contest/${contest.id}`,
+          phase: "FINISHED",
+          isRegistrationOpen: false,
+        };
+      });
+  } catch (error) {
+    console.error("[PastContests] failed:", error);
+    return [];
+  }
+}

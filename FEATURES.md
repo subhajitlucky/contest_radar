@@ -92,6 +92,12 @@ CSCosmos handles explanations and interview prep.
 - [x] **F09 accounts**: passwordless email magic links, HttpOnly sessions, logout, and `/login`.
 - [x] Account-backed favorites sync (push/pull) from `/profile`.
 - [x] Auth schema in `db/auth.sql`; tested with a local Postgres end-to-end.
+- [x] Alert subscriptions linked to user accounts for email, Discord, and push.
+- [x] Codeforces handle linking with stored rating history and refresh cron.
+- [x] Weekly contest streak calculation.
+- [x] Opt-in rating/streak leaderboard at `/leaderboard`.
+- [x] **F19 embeddable calendar**: `/embed/calendar` with platform/theme params and copy snippet.
+- [x] **F16 virtual contests**: `/virtual` timer over past Codeforces rounds with local session history.
 - [x] Removed unused legacy tracker components.
 
 ## Principles

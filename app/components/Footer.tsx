@@ -6,7 +6,9 @@ const PRODUCT = [
   { href: "/contests", label: "All contests" },
   { href: "/alerts", label: "Alerts" },
   { href: "/practice", label: "Practice" },
+  { href: "/virtual", label: "Virtual contest" },
   { href: "/profile", label: "Profile" },
+  { href: "/leaderboard", label: "Leaderboard" },
   { href: "/developers", label: "Developers" },
   { href: "/support", label: "Support" },
   { href: "/about", label: "About" },
@@ -14,7 +16,7 @@ const PRODUCT = [
 
 export default function Footer() {
   return (
-    <footer className="mt-12 border-t border-line">
+    <footer className="app-footer mt-12 border-t border-line">
       <div className="shell py-14 pb-24 lg:pb-14">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
           <div>

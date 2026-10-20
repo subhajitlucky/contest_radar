@@ -44,3 +44,14 @@ CREATE TABLE IF NOT EXISTS push_deliveries (
   sent_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   PRIMARY KEY (subscription_id, contest_key)
 );
+
+
+ALTER TABLE alert_subscriptions
+  ADD COLUMN IF NOT EXISTS user_id BIGINT;
+ALTER TABLE push_subscriptions
+  ADD COLUMN IF NOT EXISTS user_id BIGINT;
+
+CREATE INDEX IF NOT EXISTS alert_subscriptions_user_idx
+  ON alert_subscriptions (user_id);
+CREATE INDEX IF NOT EXISTS push_subscriptions_user_idx
+  ON push_subscriptions (user_id);
