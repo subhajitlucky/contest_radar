@@ -70,6 +70,14 @@ CSCosmos handles explanations and interview prep.
 - [x] Verified with a local Postgres: subscribe row, token confirmation, cron auth,
       delivery claim, and rollback on failed send.
 - [x] Verified runtime: 15 contests across 5 platforms; ICS per platform; alerts form renders.
+- [x] **UX redesign**: persistent desktop sidebar, mobile bottom navigation, top command bar.
+- [x] Overview is now a command center: next contest, next 24h, seven-day agenda, platform pulse.
+- [x] Schedule is agenda-first with platform filters, search, grid toggle, and a detail drawer.
+- [x] Alerts is a channel console (Telegram / Email / Calendar) instead of stacked cards.
+- [x] Practice is a tabbed catalog (paths / structures / algorithms / platforms).
+- [x] All visible times normalized to IST with a clear label.
+- [x] Removed decorative gradients, glows, radar rings, and glass effects in favor of a flat,
+      typographic system designed to age well.
 
 ## Principles
 

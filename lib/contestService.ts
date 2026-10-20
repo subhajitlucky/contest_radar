@@ -563,7 +563,8 @@ export function formatDuration(minutes: number): string {
   if (minutes < 60) return `${minutes} minutes`;
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
-  return mins > 0 ? `${hours}h ${mins}m` : `${hours} hours`;
+  if (mins > 0) return `${hours}h ${mins}m`;
+  return hours === 1 ? "1 hour" : `${hours} hours`;
 }
 
 export function getRelativeTime(dateString: string): string {
@@ -594,17 +595,48 @@ export function getContestStatus(startTime: string, endTime: string): "upcoming"
   return "ended";
 }
 
+const IST = "Asia/Kolkata";
+
 export function formatContestDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleString("en-US", {
+  return `${date.toLocaleString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    timeZone: IST,
+  })} IST`;
+}
+
+export function formatISTDate(dateString: string): string {
+  return new Date(dateString).toLocaleDateString("en-IN", {
+    timeZone: IST,
+    weekday: "short",
+    month: "short",
+    day: "numeric",
   });
+}
+
+export function formatISTTime(dateString: string): string {
+  return new Date(dateString)
+    .toLocaleTimeString("en-IN", {
+      timeZone: IST,
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+    .toUpperCase();
+}
+
+export function istDayKey(dateString: string): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: IST,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(dateString));
 }
 
 function toCalendarDate(iso: string): string {

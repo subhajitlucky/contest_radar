@@ -1,44 +1,83 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Navbar from "./components/Navbar";
+import type { Metadata, Viewport } from "next";
+import { IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 import Footer from "./components/Footer";
+import CommandPalette from "./components/CommandPalette";
+import Sidebar from "./components/Sidebar";
+import TopBar from "./components/TopBar";
+import MobileNav from "./components/MobileNav";
+import { getUpcomingContests } from "@/lib/contestService";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const instrumentSans = Instrument_Sans({
+  variable: "--font-instrument-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "ContestRadar - Track Coding Contests",
-  description: "Real-time tracking of upcoming contests from Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank.",
-  keywords: ["coding contests", "competitive programming", "Codeforces", "LeetCode", "CodeChef", "AtCoder", "HackerRank", "contest tracker"],
+  title: "ContestRadar — Live coding contest radar",
+  description:
+    "One live schedule for Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank. Free alerts, calendar feeds, and zero noise.",
+  keywords: [
+    "coding contests",
+    "competitive programming",
+    "Codeforces",
+    "LeetCode",
+    "CodeChef",
+    "AtCoder",
+    "HackerRank",
+    "contest tracker",
+  ],
   authors: [{ name: "ContestRadar" }],
   openGraph: {
-    title: "ContestRadar - Track Coding Contests",
-    description: "Real-time multi-platform contest tracking from official and normalized APIs",
+    title: "ContestRadar — Live coding contest radar",
+    description:
+      "One live schedule for five platforms. Free alerts, calendar feeds, and zero noise.",
     type: "website",
   },
 };
 
-export default function RootLayout({
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0b0b0c" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f5f1" },
+  ],
+};
+
+const THEME_INIT = `(function(){try{var t=localStorage.getItem('cr-theme');if(t!=='light'&&t!=='dark'){t='dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const contests = await getUpcomingContests();
+  const nextContest =
+    contests.find((contest) => !/weekday|beta|trial|practice/i.test(contest.name)) ??
+    contests[0] ??
+    null;
+
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-950`}>
-        <Navbar />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <body
+        className={`${instrumentSans.variable} ${plexMono.variable} min-h-screen antialiased`}
+      >
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+        <CommandPalette />
+        <Sidebar nextContest={nextContest} />
+        <div className="flex min-h-screen flex-col lg:pl-[260px]">
+          <TopBar />
+          <main className="flex-1 pb-20 lg:pb-0">{children}</main>
+          <Footer />
+        </div>
+        <MobileNav />
       </body>
     </html>
   );

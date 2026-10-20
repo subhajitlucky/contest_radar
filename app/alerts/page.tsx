@@ -1,6 +1,6 @@
 import Link from "next/link";
-import EmailAlertForm from "@/app/components/EmailAlertForm";
-import { PLATFORM_META, type PlatformKey } from "@/lib/contestService";
+import { Bell } from "lucide-react";
+import AlertsConsole from "@/app/components/AlertsConsole";
 
 export const metadata = {
   title: "Alerts - ContestRadar",
@@ -9,15 +9,6 @@ export const metadata = {
 };
 
 const BOT_USERNAME = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME?.replace(/^@/, "");
-
-const COMMANDS = [
-  { command: "/upcoming", description: "Next five contests across all platforms" },
-  { command: "/platforms", description: "Platform counts and the next contest on each" },
-  { command: "/subscribe", description: "Enable reminders, optionally per platform" },
-  { command: "/status", description: "Show your current alert settings" },
-  { command: "/unsubscribe", description: "Disable reminders" },
-  { command: "/start", description: "Welcome message and command list" },
-];
 
 export default async function AlertsPage({
   searchParams,
@@ -35,128 +26,53 @@ export default async function AlertsPage({
           : null;
 
   return (
-    <div className="bg-white dark:bg-gray-950 py-16">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
+    <div>
+      <section className="border-b border-line">
+        <div className="px-4 py-10 sm:px-6 lg:px-8">
+          <p className="eyebrow flex items-center gap-2">
+            <Bell className="h-3.5 w-3.5 text-signal" aria-hidden="true" />
+            Free forever
+          </p>
+          <h1 className="display mt-4 max-w-3xl text-4xl font-semibold leading-[1] tracking-tight sm:text-5xl">
+            Get the signal <span className="serif-accent">first</span>.
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">
+            Choose Telegram, email, or a calendar feed. Reminders are free and never sit
+            behind a paywall.
+          </p>
+        </div>
+      </section>
+
+      <section className="px-4 py-8 sm:px-6 lg:px-8">
         {banner && (
           <div
-            className={`rounded-xl border px-4 py-3 text-sm font-medium ${
+            className={`mb-4 rounded-lg border px-4 py-3 text-sm font-medium ${
               banner.tone === "success"
-                ? "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300"
-                : "border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300"
+                ? "border-signal/40 bg-signal/10 text-ink"
+                : "border-hot/40 bg-hot/10 text-ink"
             }`}
           >
             {banner.text}
           </div>
         )}
 
-        <div className="text-center space-y-4">
-          <p className="inline-flex items-center rounded-full border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-blue-700 dark:text-blue-300">
-            Free forever
+        <AlertsConsole botUsername={BOT_USERNAME} />
+
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-5">
+          <p className="max-w-xl text-xs leading-relaxed text-muted">
+            Email reminders need the server database and email provider configured.
+            Telegram and calendar feeds work today.
           </p>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">
-            Contest alerts
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Get reminded before contests start. Alerts are free and never sit behind a paywall.
-          </p>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-2xl border border-gray-200 dark:border-gray-800 p-6 bg-white dark:bg-gray-900">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl" aria-hidden="true">✈️</span>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Telegram bot</h2>
-            </div>
-            <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-              Query contests on demand and get the next rounds without opening the site.
-            </p>
-
-            <ul className="mt-4 space-y-2 text-sm">
-              {COMMANDS.map((item) => (
-                <li key={item.command} className="flex flex-col gap-0.5 rounded-lg bg-gray-50 dark:bg-gray-950 px-3 py-2">
-                  <code className="font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">
-                    {item.command}
-                  </code>
-                  <span className="text-gray-600 dark:text-gray-400">{item.description}</span>
-                </li>
-              ))}
-            </ul>
-
-            {BOT_USERNAME ? (
-              <a
-                href={`https://t.me/${BOT_USERNAME}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-5 inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-              >
-                Open @{BOT_USERNAME}
-              </a>
-            ) : (
-              <p className="mt-5 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 px-4 py-3 text-xs text-gray-600 dark:text-gray-400">
-                Bot setup in progress. Set <code className="font-mono">NEXT_PUBLIC_TELEGRAM_BOT_USERNAME</code> to show the invite link.
-                Scheduled reminders are next.
-              </p>
-            )}
-          </section>
-
-          <section className="rounded-2xl border border-gray-200 dark:border-gray-800 p-6 bg-white dark:bg-gray-900">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl" aria-hidden="true">📅</span>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Calendar feeds</h2>
-            </div>
-            <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-              Download an <code className="font-mono text-xs">.ics</code> file or subscribe to a live feed in
-              Google Calendar, Apple Calendar, or Outlook.
-            </p>
-
-            <div className="mt-4 space-y-2">
-              <a
-                href="/api/calendar.ics"
-                className="flex items-center justify-between rounded-lg bg-gray-50 dark:bg-gray-950 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                <span>All platforms</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">.ics</span>
-              </a>
-              {(Object.keys(PLATFORM_META) as PlatformKey[]).map((key) => (
-                <a
-                  key={key}
-                  href={`/api/calendar.ics?platform=${key}`}
-                  className="flex items-center justify-between rounded-lg bg-gray-50 dark:bg-gray-950 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                >
-                  <span>{PLATFORM_META[key].name}</span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">.ics</span>
-                </a>
-              ))}
-            </div>
-          </section>
-        </div>
-
-        <section className="rounded-2xl border border-gray-200 dark:border-gray-800 p-6 bg-gray-50 dark:bg-gray-900">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl" aria-hidden="true">✉️</span>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Email alerts</h2>
+          <div className="flex gap-2">
+            <Link href="/contests" className="btn btn-ghost btn-sm">
+              Browse contests
+            </Link>
+            <Link href="/support" className="btn btn-outline btn-sm">
+              Support the project
+            </Link>
           </div>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            Pick your platforms and lead time. You will get a confirmation email before reminders start.
-          </p>
-          <EmailAlertForm />
-        </section>
-
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/contests"
-            className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors"
-          >
-            Browse contests
-          </Link>
-          <Link
-            href="/support"
-            className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-          >
-            Support the project
-          </Link>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

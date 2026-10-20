@@ -1,268 +1,129 @@
 import Link from "next/link";
+import { ArrowUpRight, CalendarDays, Radio, ShieldCheck } from "lucide-react";
+import { PLATFORM_META, type PlatformKey } from "@/lib/contestService";
+
+export const metadata = {
+  title: "About - ContestRadar",
+  description:
+    "How ContestRadar normalizes five contest platforms into one free, real-time schedule.",
+};
+
+const PLATFORM_KEYS = Object.keys(PLATFORM_META) as PlatformKey[];
 
 export default function AboutPage() {
   return (
-    <div className="bg-white dark:bg-gray-950 py-12">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            About Contest<span className="text-blue-600 dark:text-blue-400">Radar</span>
+    <div>
+      <section className="border-b border-line">
+        <div className="px-4 py-10 sm:px-6 lg:px-8">
+          <p className="eyebrow flex items-center gap-2">
+            <Radio className="h-3.5 w-3.5 text-signal" aria-hidden="true" />
+            About
+          </p>
+          <h1 className="display mt-4 max-w-4xl text-4xl font-semibold leading-[1] tracking-tight sm:text-5xl">
+            One signal for the <span className="serif-accent">whole field</span>.
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-The multi-platform contest tracker with real-time API data, alerts, and analytics.
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted">
+            ContestRadar normalizes official and public platform data into one calm schedule.
+            No accounts required to browse, no paywall on alerts, no sponsored rankings.
           </p>
         </div>
+      </section>
 
-        {/* Mission Section */}
-        <div className="mb-16">
-          <div className="p-8 rounded-3xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-blue-500 text-white rounded-xl flex items-center justify-center font-bold text-xl">
-                🎯
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Our Mission</h2>
+      <section className="grid gap-4 px-4 py-8 sm:px-6 lg:grid-cols-3 lg:px-8">
+        <div className="panel p-6">
+          <ShieldCheck className="h-5 w-5 text-signal" aria-hidden="true" />
+          <h2 className="display mt-4 text-xl font-bold">Signal, not noise</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            We show the next round, the countdown, and the link. No infinite feed, no
+            engagement bait, no dark patterns.
+          </p>
+        </div>
+        <div className="panel p-6">
+          <CalendarDays className="h-5 w-5 text-signal" aria-hidden="true" />
+          <h2 className="display mt-4 text-xl font-bold">Calendar native</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            Every contest can go to Google Calendar, and every platform has a live .ics feed
+            you can subscribe to once.
+          </p>
+        </div>
+        <div className="panel p-6">
+          <Radio className="h-5 w-5 text-signal" aria-hidden="true" />
+          <h2 className="display mt-4 text-xl font-bold">Free forever</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            Discovery, alerts, and calendar feeds stay free. Donations only cover
+            infrastructure, never feature access.
+          </p>
+        </div>
+      </section>
+
+      <section className="px-4 pb-10 sm:px-6 lg:px-8">
+        <div className="panel p-6 sm:p-8">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="eyebrow">Data sources</p>
+              <h2 className="display mt-2 text-2xl font-bold">Five platforms, one schema</h2>
             </div>
-            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-              At ContestRadar, we believe every competitive programmer deserves to stay informed about contests
-              in real-time without checking multiple sites. We normalize official and public platform data from
-              Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank into one schedule.
-            </p>
+            <Link href="/contests" className="btn btn-outline btn-sm">
+              Browse the schedule
+              <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+            {PLATFORM_KEYS.map((key) => (
+              <a
+                key={key}
+                href={PLATFORM_META[key].url}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-platform={key}
+                className="group rounded-xl border border-line/70 bg-panel-2/40 px-3 py-4 transition-colors hover:border-signal/50"
+              >
+                <span className="flex items-center gap-2">
+                  <span className="platform-dot" aria-hidden="true" />
+                  <span className="text-sm font-semibold">{PLATFORM_META[key].name}</span>
+                </span>
+                <span className="mt-2 block text-xs text-muted">Official or normalized API</span>
+              </a>
+            ))}
           </div>
         </div>
+      </section>
 
-        {/* Features Grid */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">What We Offer</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <FeatureCard
-              icon="🔔"
-              title="Real-time Notifications"
-              description="Get notified exactly when new contests are announced or schedules change"
+      <section className="px-4 pb-14 sm:px-6 lg:px-8">
+        <div className="panel p-6 sm:p-8">
+          <h2 className="display text-2xl font-bold">FAQ</h2>
+          <div className="mt-5 divide-y divide-line/70">
+            <Faq
+              q="Is ContestRadar completely free?"
+              a="Yes. Contest discovery, alerts, and calendar features stay free. Donations only cover infrastructure."
             />
-            <FeatureCard
-              icon="📊"
-              title="Multi-platform Analytics"
-              description="View statistics about upcoming contests, active contests, and trends"
+            <Faq
+              q="Does it support other platforms?"
+              a="Yes: Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank are normalized into one schedule."
             />
-            <FeatureCard
-              icon="⏰"
-              title="Smart Reminders"
-              description="Set custom reminders 1 hour, 30 minutes, or 15 minutes before contests"
+            <Faq
+              q="How accurate is the data?"
+              a="Sources refresh every five minutes. Each platform adapter fails independently, so one outage does not blank the schedule."
             />
-            <FeatureCard
-              icon="📱"
-              title="Mobile Friendly"
-              description="Access your contest schedule on any device, anywhere, anytime"
-            />
-          </div>
-        </div>
-
-        {/* Supported Platforms */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Data Sources</h2>
-          <div className="space-y-4">
-            <PlatformCard
-              name="Codeforces API"
-              description="Div. 1, Div. 2, Div. 3, Div. 4, Educational Rounds, and more"
-              Link="codeforces.com/api"
-              color="blue"
-            />
-            <PlatformCard
-              name="LeetCode GraphQL"
-              description="Weekly and biweekly contests"
-              Link="leetcode.com/graphql"
-              color="orange"
-            />
-            <PlatformCard
-              name="CodeChef"
-              description="Starters and other scheduled contests"
-              Link="codechef.com"
-              color="red"
-            />
-            <PlatformCard
-              name="AtCoder"
-              description="ABC, ARC, AGC, and other contests"
-              Link="atcoder.jp"
-              color="blue"
-            />
-            <PlatformCard
-              name="HackerRank"
-              description="Rated and hiring contests"
-              Link="hackerrank.com"
-              color="orange"
+            <Faq
+              q="What does the remind button do?"
+              a="It opens the alerts page. Telegram reminders work today; email alerts work when the server database and email provider are configured."
             />
           </div>
         </div>
-
-        {/* Team Section */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">About the Team</h2>
-          <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-              ContestRadar is built by competitive programmers, for competitive programmers. We&apos;re a passionate team
-              who understands the challenges of staying updated with the rapidly growing competitive programming ecosystem.
-            </p>
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-              Our goal is to make this platform free and accessible to everyone in the competitive programming community.
-              Whether you&apos;re a beginner just starting your journey or a seasoned competitor, we&apos;re here to help you
-              never miss a contest.
-            </p>
-          </div>
-        </div>
-
-        {/* FAQ Section */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Frequently Asked Questions</h2>
-          <div className="space-y-4">
-            <details className="group bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-              <summary className="px-6 py-4 cursor-pointer font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                Is ContestRadar completely free?
-                <span className="float-right group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 pb-4 text-gray-700 dark:text-gray-300">
-                Yes. Contest discovery, alerts, and calendar features stay free. Donations only cover infrastructure, never feature access.
-              </div>
-            </details>
-
-            <details className="group bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-              <summary className="px-6 py-4 cursor-pointer font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                How accurate are the contest details?
-                <span className="float-right group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 pb-4 text-gray-700 dark:text-gray-300">
-                We combine official and normalized platform APIs, refreshed every five minutes. Usually updates appear within minutes of official announcements.
-              </div>
-            </details>
-
-            <details className="group bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-              <summary className="px-6 py-4 cursor-pointer font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                Does ContestRadar support other platforms?
-                <span className="float-right group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 pb-4 text-gray-700 dark:text-gray-300">
-                Yes: Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank are live in one schedule.
-              </div>
-            </details>
-
-            <details className="group bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-              <summary className="px-6 py-4 cursor-pointer font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                What does the remind me button do?
-                <span className="float-right group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 pb-4 text-gray-700 dark:text-gray-300">
-                The Remind button opens the alerts page. Telegram reminders work today; email alerts work when the server database and email provider are configured.
-              </div>
-            </details>
-          </div>
-        </div>
-
-        {/* Contact Section */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Get in Touch</h2>
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Have Questions?</h3>
-                <p className="text-blue-100 mb-4">
-                  We&apos;d love to hear from you. Whether you have suggestions, bug reports, or just want to say hello!
-                </p>
-                <div className="flex gap-3">
-                  <a href="mailto:contact@contestradar.com" className="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors">
-                    ✉️ Email
-                  </a>
-                  <Link href="/contact" className="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors">
-                    📝 Contact Form
-                  </Link>
-                </div>
-              </div>
-              <div className="bg-white/10 p-6 rounded-xl">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">🚀</span>
-                    <span>Launching new features regularly</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">💬</span>
-                    <span>Active community support</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">❤️</span>
-                    <span>Built by programmers, for programmers</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Links */}
-        <div className="text-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
-          <Link href="/privacy" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            Privacy Policy
-          </Link>
-          <span>•</span>
-          <Link href="/terms" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            Terms of Service
-          </Link>
-          <span>•</span>
-          <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            Back to Home
-          </Link>
-        </div>
-
-        {/* Footer Note */}
-        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>Last updated: December 2025</p>
-          <p className="mt-1">Made with ❤️ and lots of ☕</p>
-        </div>
-
-      </div>
+      </section>
     </div>
   );
 }
 
-// Sub-components
-function FeatureCard({ icon, title, description }: { icon: string; title: string; description: string }) {
+function Faq({ q, a }: { q: string; a: string }) {
   return (
-    <div className="p-6 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg transition-all">
-      <div className="text-3xl mb-3">{icon}</div>
-      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{title}</h3>
-      <p className="text-gray-600 dark:text-gray-400">{description}</p>
-    </div>
-  );
-}
-
-function PlatformCard({ name, description, Link, color }: { name: string; description: string; Link: string; color: string }) {
-  const colorClasses: Record<string, string> = {
-    blue: "border-blue-500",
-    orange: "border-orange-500",
-    red: "border-red-500",
-  };
-
-  const bgClasses: Record<string, string> = {
-    blue: "bg-blue-50 dark:bg-blue-900/20",
-    orange: "bg-orange-50 dark:bg-orange-900/20",
-    red: "bg-red-50 dark:bg-red-900/20",
-  };
-
-  return (
-    <div className={`p-6 rounded-2xl border-l-4 ${colorClasses[color]} ${bgClasses[color]} dark:bg-gray-900/50`}>
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">{name}</h3>
-          <p className="text-sm text-gray-700 dark:text-gray-300">{description}</p>
-        </div>
-        <a
-          href={`https://${Link}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-gray-900 dark:bg-white dark:text-gray-900 rounded hover:opacity-90 transition-opacity"
-        >
-          Visit →
-        </a>
-      </div>
-    </div>
+    <details className="group py-4">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold text-foreground">
+        {q}
+        <span className="text-muted transition-transform group-open:rotate-45">+</span>
+      </summary>
+      <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">{a}</p>
+    </details>
   );
 }

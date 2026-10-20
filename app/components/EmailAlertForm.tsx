@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import { PLATFORM_META, type PlatformKey } from "@/lib/contestService";
 
 const PLATFORM_KEYS = Object.keys(PLATFORM_META) as PlatformKey[];
@@ -18,7 +18,7 @@ export default function EmailAlertForm() {
     );
   };
 
-  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStatus("loading");
     setMessage("");
@@ -46,9 +46,9 @@ export default function EmailAlertForm() {
   };
 
   return (
-    <form onSubmit={submit} className="mt-4 space-y-4">
+    <form onSubmit={submit} className="mt-5 space-y-5">
       <div>
-        <label htmlFor="alert-email" className="block text-sm font-semibold text-gray-900 dark:text-white">
+        <label htmlFor="alert-email" className="eyebrow">
           Email address
         </label>
         <input
@@ -58,20 +58,19 @@ export default function EmailAlertForm() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="you@example.com"
-          className="mt-2 w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:border-blue-500 focus:outline-none"
+          className="field mt-2"
         />
       </div>
 
       <fieldset>
-        <legend className="text-sm font-semibold text-gray-900 dark:text-white">Platforms</legend>
+        <legend className="eyebrow">Platforms</legend>
         <div className="mt-2 flex flex-wrap gap-2">
           {PLATFORM_KEYS.map((key) => (
             <label
               key={key}
-              className={`inline-flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${
-                platforms.includes(key)
-                  ? "border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
-                  : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400"
+              data-platform={key}
+              className={`chip cursor-pointer ${
+                platforms.includes(key) ? "chip-active" : ""
               }`}
             >
               <input
@@ -80,24 +79,25 @@ export default function EmailAlertForm() {
                 onChange={() => togglePlatform(key)}
                 className="sr-only"
               />
+              <span className="platform-dot" aria-hidden="true" />
               {PLATFORM_META[key].name}
             </label>
           ))}
         </div>
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-muted">
           Leave all unchecked to receive every platform.
         </p>
       </fieldset>
 
       <div>
-        <label htmlFor="alert-lead" className="block text-sm font-semibold text-gray-900 dark:text-white">
+        <label htmlFor="alert-lead" className="eyebrow">
           Remind me before
         </label>
         <select
           id="alert-lead"
           value={leadMinutes}
           onChange={(event) => setLeadMinutes(Number(event.target.value))}
-          className="mt-2 w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:border-blue-500 focus:outline-none"
+          className="field mt-2"
         >
           <option value={15}>15 minutes</option>
           <option value={30}>30 minutes</option>
@@ -107,27 +107,19 @@ export default function EmailAlertForm() {
         </select>
       </div>
 
-      <button
-        type="submit"
-        disabled={status === "loading"}
-        className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-60"
-      >
+      <button type="submit" disabled={status === "loading"} className="btn btn-signal w-full">
         {status === "loading" ? "Saving…" : "Get email alerts"}
       </button>
 
       {message && (
-        <p
-          className={`text-sm ${
-            status === "success" ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
-          }`}
-        >
+        <p className={`text-sm ${status === "success" ? "text-signal" : "text-hot"}`}>
           {message}
         </p>
       )}
 
-      <p className="text-xs text-gray-500 dark:text-gray-400">
-        You will receive a confirmation email. Email alerts require server configuration; if
-        it is missing, Telegram and calendar feeds still work.
+      <p className="text-xs leading-relaxed text-muted">
+        You will receive a confirmation email. Email delivery is being enabled; Telegram
+        and calendar feeds are available today.
       </p>
     </form>
   );

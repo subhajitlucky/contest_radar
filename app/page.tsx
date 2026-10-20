@@ -1,171 +1,256 @@
-import FeaturedContests from "./components/FeaturedContests";
-import CodeforcesTracker from "./components/CodeforcesTracker";
-import { getContestStats } from '@/lib/contestService';
+import Link from "next/link";
+import { ArrowRight, ArrowUpRight, Bell, CalendarDays } from "lucide-react";
+import {
+  PLATFORM_META,
+  formatDuration,
+  formatISTDate,
+  formatISTTime,
+  getContestStats,
+  getUpcomingContests,
+  istDayKey,
+  type Contest,
+  type PlatformKey,
+} from "@/lib/contestService";
+import Countdown from "./components/Countdown";
+import NextContestPanel from "./components/NextContestPanel";
+
+export const revalidate = 300;
+
+const PLATFORM_KEYS = Object.keys(PLATFORM_META) as PlatformKey[];
+
+function nowMs() {
+  return Date.now();
+}
 
 export default async function Home() {
-  // Fetch real-time stats
-  const stats = await getContestStats();
+  const [contests, stats] = await Promise.all([getUpcomingContests(), getContestStats()]);
+  const now = nowMs();
+  const next24h = new Date(now + 24 * 60 * 60 * 1000).getTime();
+  const weekEnd = new Date(now + 7 * 24 * 60 * 60 * 1000).getTime();
+
+  const next =
+    contests.find((contest) => !/weekday|beta|trial|practice/i.test(contest.name)) ?? contests[0];
+  const next24 = contests.filter((contest) => {
+    const start = new Date(contest.startTime).getTime();
+    return start > now && start <= next24h;
+  });
+  const week = contests.filter((contest) => new Date(contest.startTime).getTime() <= weekEnd);
+
+  const dayGroups = new Map<string, Contest[]>();
+  for (const contest of week) {
+    const key = istDayKey(contest.startTime);
+    const list = dayGroups.get(key) ?? [];
+    list.push(contest);
+    dayGroups.set(key, list);
+  }
 
   return (
-    <>
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-b from-white via-blue-50/30 to-white dark:from-gray-950 dark:via-blue-950/10 dark:to-gray-950">
-        {/* Decorative background elements */}
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] dark:opacity-10"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32 relative">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Main Heading */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 dark:text-white mb-6">
-              Never Miss a{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
-                Coding Contest
-              </span>
-            </h1>
-
-            {/* Subtitle */}
-            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed">
-              Track upcoming contests from Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank in real-time.
-              Get timely notifications and never miss your favorite competitions.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-              <a
-                href="/alerts"
-                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-                Get Notified
-              </a>
-              <a
-                href="/contests"
-                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-400 rounded-xl transition-all hover:scale-105"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                </svg>
-                View All Contests
-              </a>
+    <div>
+      <header className="border-b border-line">
+        <div className="px-4 py-8 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Overview · {stats.upcoming} upcoming</p>
+              <h1 className="display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+                The field, at a glance.
+              </h1>
+              <p className="mt-2 max-w-xl text-sm text-muted">
+                Live across five platforms. All times shown in IST.
+              </p>
             </div>
-
-            {/* Stats - Now Dynamic from Real Data */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t border-gray-200/60 dark:border-gray-800/60">
-              <div>
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                  {stats.totalContests.toLocaleString()}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Contests Tracked</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
-                  {stats.upcoming}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Upcoming</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
-                  0
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Paywalls</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">100%</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Free forever</div>
-              </div>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/alerts" className="btn btn-signal">
+                <Bell className="h-4 w-4" aria-hidden="true" />
+                Set up alerts
+              </Link>
+              <Link href="/contests" className="btn btn-outline">
+                <CalendarDays className="h-4 w-4" aria-hidden="true" />
+                Full schedule
+              </Link>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Codeforces Tracker Section - Live Data */}
-      <CodeforcesTracker />
+      <div className="px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
+          {next ? (
+            <NextContestPanel contest={next} />
+          ) : (
+            <div className="panel p-6">
+              <p className="eyebrow">Quiet window</p>
+              <p className="display mt-3 text-2xl font-semibold">No upcoming contests found.</p>
+              <p className="mt-2 text-sm text-muted">Sources refresh every five minutes.</p>
+            </div>
+          )}
 
-      {/* Featured Contests Section - Now Async with Real Data */}
-      <FeaturedContests />
+          <section className="panel p-5" aria-label="Next 24 hours">
+            <div className="flex items-center justify-between">
+              <p className="eyebrow">Next 24 hours</p>
+              <span className="mono text-[11px] text-muted">{next24.length}</span>
+            </div>
 
-      {/* Features Section */}
-      <div className="bg-white dark:bg-gray-950 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Why Choose ContestRadar?
+            {next24.length > 0 ? (
+              <div className="mt-3 divide-y divide-line">
+                {next24.slice(0, 4).map((contest) => (
+                  <Link
+                    key={`${contest.platformKey}-${contest.id}`}
+                    href={`/contests?highlight=${contest.platformKey}:${contest.id}`}
+                    data-platform={contest.platformKey}
+                    className="group flex items-center gap-3 py-3"
+                  >
+                    <span className="mono w-16 shrink-0 whitespace-nowrap text-[11px] tabular-nums text-muted">
+                      {formatISTTime(contest.startTime)}
+                    </span>
+                    <span className="platform-dot" aria-hidden="true" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[13px] font-medium group-hover:text-signal">
+                        {contest.name}
+                      </span>
+                      <span className="mono block text-[10px] uppercase tracking-wider text-muted">
+                        {contest.platform} · {formatDuration(contest.duration)}
+                      </span>
+                    </span>
+                    <Countdown
+                      startTime={contest.startTime}
+                      className="mono shrink-0 text-[10px] tabular-nums text-signal"
+                    />
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-6 border-t border-line pt-5">
+                <p className="text-sm text-muted">No contests in the next 24 hours.</p>
+                <Link
+                  href="/contests"
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-signal"
+                >
+                  Look further out
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </Link>
+              </div>
+            )}
+          </section>
+        </div>
+
+        <section className="mt-10" aria-label="This week">
+          <div className="flex flex-wrap items-end justify-between gap-3 border-b border-line pb-3">
+            <div>
+              <p className="eyebrow">This week</p>
+              <h2 className="display mt-2 text-2xl font-semibold tracking-tight">
+                Agenda · next seven days
+              </h2>
+            </div>
+            <Link href="/contests" className="btn btn-ghost btn-sm">
+              Open schedule
+              <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
+          </div>
+
+          <div className="divide-y divide-line">
+            {[...dayGroups.entries()].map(([day, items]) => (
+              <div key={day} className="grid gap-3 py-5 sm:grid-cols-[120px_1fr] sm:gap-6">
+                <div>
+                  <p className="mono text-[11px] font-medium uppercase tracking-wider text-ink">
+                    {formatISTDate(items[0].startTime)}
+                  </p>
+                  <p className="mono mt-1 text-[10px] uppercase tracking-wider text-muted">
+                    {items.length} round{items.length === 1 ? "" : "s"}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  {items.map((contest) => (
+                    <Link
+                      key={`${contest.platformKey}-${contest.id}`}
+                      href={`/contests?highlight=${contest.platformKey}:${contest.id}`}
+                      data-platform={contest.platformKey}
+                      className="group grid grid-cols-[64px_14px_1fr_auto] items-center gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-panel"
+                    >
+                      <span className="mono whitespace-nowrap text-[11px] tabular-nums text-muted">
+                        {formatISTTime(contest.startTime)}
+                      </span>
+                      <span className="platform-dot" aria-hidden="true" />
+                      <span className="min-w-0">
+                        <span className="block truncate text-[13px] font-medium group-hover:text-signal">
+                          {contest.name}
+                        </span>
+                        <span className="mono block text-[10px] uppercase tracking-wider text-muted">
+                          {PLATFORM_META[contest.platformKey].name} · {contest.type}
+                        </span>
+                      </span>
+                      <Countdown
+                        startTime={contest.startTime}
+                        className="mono text-[10px] tabular-nums text-muted"
+                      />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {dayGroups.size === 0 && (
+              <div className="py-10 text-sm text-muted">
+                No contests announced for the next seven days.
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="mt-10" aria-label="Platform pulse">
+          <div className="border-b border-line pb-3">
+            <p className="eyebrow">Platform pulse</p>
+            <h2 className="display mt-2 text-2xl font-semibold tracking-tight">
+              Every judge, one table
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Everything you need to stay ahead in competitive programming
-            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-blue-500 dark:hover:border-blue-400 transition-all hover:scale-105">
-              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Real-time Updates</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Get instant notifications when new contests are announced from official APIs.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-indigo-500 dark:hover:border-indigo-400 transition-all hover:scale-105">
-              <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Universal Tracking</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Track contests across Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank in one schedule.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-emerald-500 dark:hover:border-emerald-400 transition-all hover:scale-105">
-              <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Smart Alerts</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Set up personalized notifications before contests start. Never miss your favorite competitions.
-              </p>
-            </div>
+          <div className="divide-y divide-line">
+            {PLATFORM_KEYS.map((key) => {
+              const platformContests = contests.filter((contest) => contest.platformKey === key);
+              const platformNext = platformContests[0];
+              return (
+                <Link
+                  key={key}
+                  href={`/contests?platform=${key}`}
+                  data-platform={key}
+                  className="group flex flex-wrap items-center gap-3 py-3.5 transition-colors hover:bg-panel"
+                >
+                  <span className="platform-dot" aria-hidden="true" />
+                  <span className="w-28 shrink-0 text-[13px] font-medium">
+                    {PLATFORM_META[key].name}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-[13px] text-muted">
+                    {platformNext ? platformNext.name : "No upcoming round"}
+                  </span>
+                  <span className="mono text-[10px] uppercase tracking-wider text-muted">
+                    {platformContests.length} tracked
+                  </span>
+                  <ArrowUpRight
+                    className="h-3.5 w-3.5 text-muted transition-colors group-hover:text-ink"
+                    aria-hidden="true"
+                  />
+                </Link>
+              );
+            })}
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* Call to Action */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 py-20">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Ready to never miss a contest?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Join thousands of competitive programmers using ContestRadar to stay ahead. Real-time data from official sources.
+        <section className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
+          <p className="text-sm text-muted">
+            Free alerts for every platform. No paywall, no sponsored rankings.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="/subscribe"
-              className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all"
-            >
-              Get Started Free
-            </a>
-            <a
-              href="/contests"
-              className="px-8 py-4 bg-transparent text-white font-semibold border-2 border-white rounded-xl hover:bg-white/10 transition-all"
-            >
-              View Contests
+          <div className="flex gap-2">
+            <Link href="/alerts" className="btn btn-outline btn-sm">
+              <Bell className="h-3.5 w-3.5" aria-hidden="true" />
+              Alerts
+            </Link>
+            <a href="/api/calendar.ics" className="btn btn-ghost btn-sm">
+              <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
+              .ics feed
             </a>
           </div>
-        </div>
+        </section>
       </div>
-    </>
+    </div>
   );
 }
