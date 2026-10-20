@@ -1,7 +1,7 @@
 # Contest Radar — What Remains
 
-Status snapshot: **19 of 20 planned features implemented**. The extension is ready to
-publish (icons, store copy, privacy policy), pending a Chrome Web Store submission.
+Status snapshot: **20 of 20 planned features implemented**. The browser extension is
+built and packaged; only Chrome Web Store submission remains.
 
 ## Shipped
 
@@ -27,7 +27,6 @@ publish (icons, store copy, privacy policy), pending a Chrome Web Store submissi
 
 | ID | Feature | Priority | Depends on | Notes |
 | :--- | :--- | :--- | :--- | :--- |
-| F20 | Extension polish and publish | P2 | Chrome Web Store account | Icons, store assets, privacy text, publishing. |
 
 ## Platform improvements
 
@@ -49,4 +48,5 @@ publish (icons, store copy, privacy policy), pending a Chrome Web Store submissi
 
 ## Next batch
 
-F20 publish.
+Publish the extension, then focus on reliability, tests, accessibility, and source-health
+dashboards rather than adding surface area.

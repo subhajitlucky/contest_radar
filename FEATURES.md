@@ -98,7 +98,8 @@ CSCosmos handles explanations and interview prep.
 - [x] Opt-in rating/streak leaderboard at `/leaderboard`.
 - [x] **F19 embeddable calendar**: `/embed/calendar` with platform/theme params and copy snippet.
 - [x] **F16 virtual contests**: `/virtual` timer over past Codeforces rounds with local session history.
-- [x] Extension icons, store listing copy, and privacy policy prepared for submission.
+- [x] Extension implemented and packaged with icons, store copy, and privacy policy.
+- [ ] Chrome Web Store submission (distribution, not code).
 - [x] Removed unused legacy tracker components.
 
 ## Principles
