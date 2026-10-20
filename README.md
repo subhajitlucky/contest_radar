@@ -86,6 +86,19 @@ Alerts need a Postgres database and an email provider. Both have free tiers.
 If these variables are missing, Telegram and calendar feeds still work; email
 subscription returns an honest `503` instead of failing silently.
 
+## Browser push and Discord
+
+Generate VAPID keys with `npx web-push generate-vapid-keys`, then set
+`VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, and the same public key as
+`NEXT_PUBLIC_VAPID_PUBLIC_KEY`. The service worker is served from `/sw.js`.
+
+Discord uses channel webhooks. Create one in Discord under Server Settings →
+Integrations → Webhooks, then paste it into the Discord tab on `/alerts`. The server
+stores the webhook and posts contest reminders through the existing cron sender.
+
+Re-run `db/alerts.sql` after upgrading; it adds push tables and the Discord channel
+constraint.
+
 ## Telegram setup
 
 1. Create a bot with [BotFather](https://t.me/BotFather) and set `TELEGRAM_BOT_TOKEN`.

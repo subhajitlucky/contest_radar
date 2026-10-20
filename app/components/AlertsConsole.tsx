@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight, CalendarDays, Mail, Send } from "lucide-react";
+import { ArrowUpRight, BellRing, CalendarDays, Mail, MessageSquare, Send } from "lucide-react";
 import { PLATFORM_META, type PlatformKey } from "@/lib/contestService";
+import DiscordForm from "./DiscordForm";
 import EmailAlertForm from "./EmailAlertForm";
+import PushSubscribe from "./PushSubscribe";
 
-type Channel = "telegram" | "email" | "calendar";
+type Channel = "telegram" | "discord" | "email" | "push" | "calendar";
 
 const CHANNELS: Array<{
   id: Channel;
@@ -20,10 +22,22 @@ const CHANNELS: Array<{
     icon: Send,
   },
   {
+    id: "discord",
+    label: "Discord",
+    description: "Server webhook reminders",
+    icon: MessageSquare,
+  },
+  {
     id: "email",
     label: "Email",
     description: "Double opt-in reminders",
     icon: Mail,
+  },
+  {
+    id: "push",
+    label: "Push",
+    description: "Native browser notifications",
+    icon: BellRing,
   },
   {
     id: "calendar",
@@ -46,7 +60,7 @@ export default function AlertsConsole({ botUsername }: { botUsername?: string })
 
   return (
     <div className="grid gap-4 lg:grid-cols-[250px_1fr]">
-      <div className="grid grid-cols-3 gap-1.5 lg:block lg:space-y-1.5" role="tablist" aria-label="Alert channels">
+      <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:block lg:space-y-1.5" role="tablist" aria-label="Alert channels">
         {CHANNELS.map((item) => {
           const Icon = item.icon;
           const active = channel === item.id;
@@ -122,6 +136,27 @@ export default function AlertsConsole({ botUsername }: { botUsername?: string })
           </section>
         )}
 
+        {channel === "discord" && (
+          <section id="channel-discord" role="tabpanel">
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-md border border-line">
+                <MessageSquare className="h-4 w-4 text-signal" aria-hidden="true" />
+              </span>
+              <div>
+                <h2 className="text-lg font-semibold tracking-tight">Discord reminders</h2>
+                <p className="mono text-[10px] uppercase tracking-[0.14em] text-muted">
+                  Server webhook
+                </p>
+              </div>
+            </div>
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">
+              Post contest reminders into a Discord channel. Paste the webhook URL and
+              choose platforms and lead time.
+            </p>
+            <DiscordForm />
+          </section>
+        )}
+
         {channel === "email" && (
           <section id="channel-email" role="tabpanel">
             <div className="flex items-center gap-3">
@@ -139,6 +174,25 @@ export default function AlertsConsole({ botUsername }: { botUsername?: string })
               Pick platforms and lead time. Confirm once, then reminders arrive by email.
             </p>
             <EmailAlertForm />
+          </section>
+        )}
+
+        {channel === "push" && (
+          <section id="channel-push" role="tabpanel">
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-md border border-line">
+                <BellRing className="h-4 w-4 text-signal" aria-hidden="true" />
+              </span>
+              <div>
+                <h2 className="text-lg font-semibold tracking-tight">Browser push</h2>
+                <p className="mono text-[10px] uppercase tracking-[0.14em] text-muted">
+                  Native notifications
+                </p>
+              </div>
+            </div>
+            <div className="mt-4">
+              <PushSubscribe />
+            </div>
           </section>
         )}
 

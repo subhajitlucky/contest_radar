@@ -7,7 +7,7 @@ import {
 
 export interface AlertSubscription {
   id: string;
-  channel: "email" | "telegram";
+  channel: "email" | "telegram" | "discord";
   destination: string;
   platforms: PlatformKey[];
   lead_minutes: number;
@@ -88,6 +88,25 @@ export async function sendAlertEmail(
   if (!response.ok) {
     const message = await response.text();
     throw new Error(`Resend error ${response.status}: ${message}`);
+  }
+}
+
+export async function sendDiscordMessage(
+  webhookUrl: string,
+  text: string
+): Promise<void> {
+  const response = await fetch(webhookUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      content: text,
+      allowed_mentions: { parse: [] },
+    }),
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(`Discord error ${response.status}: ${message}`);
   }
 }
 

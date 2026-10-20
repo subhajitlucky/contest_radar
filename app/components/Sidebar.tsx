@@ -12,6 +12,7 @@ import {
   Info,
   LayoutDashboard,
   LifeBuoy,
+  UserRound,
 } from "lucide-react";
 import { PLATFORM_META, type Contest, type PlatformKey } from "@/lib/contestService";
 import Countdown from "./Countdown";
@@ -22,6 +23,7 @@ const MAIN = [
   { href: "/contests", label: "Schedule", icon: CalendarDays },
   { href: "/alerts", label: "Alerts", icon: Bell },
   { href: "/practice", label: "Practice", icon: BookOpen },
+  { href: "/profile", label: "Profile", icon: UserRound },
 ];
 
 const PROJECT = [

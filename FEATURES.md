@@ -82,6 +82,13 @@ CSCosmos handles explanations and interview prep.
 - [x] **F15 detail pages**: `/contests/[platform]/[id]` with canonical metadata and Event JSON-LD.
 - [x] **F18 API docs**: `/developers` with endpoints, examples, cache and attribution rules.
 - [x] **F20 extension scaffold**: `extension/` Manifest V3 popup for the next five contests.
+- [x] **F11 rating profile**: `/profile` with Codeforces rating chart and recent results.
+- [x] **F13 post-contest analysis**: rating deltas, contest and standings links.
+- [x] **F14 practice-next**: rating-based recommendations into CSCosmos.
+- [x] `/api/rating` endpoint documented on `/developers`.
+- [x] **F06 web push**: service worker, VAPID subscribe route, push delivery in cron.
+- [x] **F07 Discord**: webhook subscription route, channel form, cron delivery.
+- [x] Push and Discord channels added to the alerts console.
 - [x] Removed unused legacy tracker components.
 
 ## Principles

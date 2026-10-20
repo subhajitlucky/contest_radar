@@ -1,7 +1,7 @@
 # Contest Radar — What Remains
 
-Status snapshot: **11 of 20 planned features shipped**, plus a working browser-extension
-scaffold. Remaining work is grouped by dependency and cost.
+Status snapshot: **14 of 20 planned features complete**, plus an unpublished extension
+scaffold.
 
 ## Shipped
 
@@ -11,18 +11,18 @@ scaffold. Remaining work is grouped by dependency and cost.
 - Live countdowns, per-contest calendar links, and per-platform `.ics` feeds.
 - Email alerts with double opt-in, Telegram subscriptions, cron sender, delivery deduplication.
 - Local favorites and a Saved filter.
-- Developer API docs and extension scaffold.
+- Developer API docs and extension scaffold (publication pending).
 - App-shell UX redesign with light/dark themes and IST normalization.
+- Telegram and Discord alerts.
+- Browser push subscriptions with a service worker and cron delivery.
+- Codeforces rating profile at `/profile` with rating chart and recent results.
+- Post-contest results/standings links.
+- Rating-based practice recommendations into CSCosmos.
 
 ## Feature backlog
 
 | ID | Feature | Priority | Depends on | Notes |
 | :--- | :--- | :--- | :--- | :--- |
-| F11 | Contest history + rating graph | P1 | Official profile APIs | Link Codeforces/LeetCode handles; show rating and attendance history. |
-| F13 | Post-contest analysis | P1 | F11 | Results, rating delta, editorial/solution links, upsolve list. |
-| F14 | Practice-next recommendations | P1 | F13 + CSCosmos topic map | Recommend 3 topics after a contest. |
-| F06 | Web push alerts | P1 | VAPID keys + subscription storage | Reuse existing Postgres; service worker and permission UX. |
-| F07 | Discord alerts | P1 | Existing alert sender | Discord webhook/bot; Telegram is already done. |
 | F09 | Accounts + cross-device sync | P0 for retention | Auth + Postgres | Sync favorites, preferences, and alert settings. |
 | F12 | Participation streaks | P2 | F11 | Weekly contest streak and calendar heatmap. |
 | F17 | Leaderboards + college boards | P2 | F09, F11 | Opt-in aggregation and anti-gaming rules. |
@@ -44,11 +44,10 @@ scaffold. Remaining work is grouped by dependency and cost.
 
 ## Critical path
 
-1. **Rating history** (F11) unlocks post-contest analysis, streaks, and recommendations.
-2. **Auth + Postgres** (F09) unlocks sync, leaderboards, and reliable push subscriptions.
-3. **Web push/Discord** (F06/F07) can ship before accounts by storing subscriptions by channel.
-4. **Embed layout** (F19) and **mock contests** (F16) are separate tracks; do not block core alerts.
+1. **Auth + Postgres** (F09) unlocks sync, leaderboards, and durable user profiles.
+2. **Streaks** (F12) become trivial once rating history is stored server-side.
+3. **Embed layout** (F19) and **mock contests** (F16) are separate tracks; do not block core alerts.
 
 ## Next batch
 
-F11 → F13 → F14, then F06 → F07, then F09 → F12 → F17.
+F09 → F12 → F17, then F19, then F16.

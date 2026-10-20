@@ -62,6 +62,31 @@ const ENDPOINTS = [
   },
   {
     method: "GET",
+    path: "/api/rating?handle=tourist",
+    description:
+      "Codeforces profile, max rating, contest count, best rank, and up to 30 rating changes.",
+    sample: `{
+  "ok": true,
+  "profile": {
+    "handle": "tourist",
+    "rating": 3800,
+    "maxRating": 4009,
+    "rank": "legendary grandmaster"
+  },
+  "stats": { "contests": 120, "bestRank": 1, "maxDelta": 120 },
+  "history": [
+    {
+      "contestId": 2222,
+      "rank": 1,
+      "oldRating": 3780,
+      "newRating": 3800,
+      "delta": 20
+    }
+  ]
+}`,
+  },
+  {
+    method: "GET",
     path: "/api/calendar.ics?platform=atcoder",
     description:
       "Live iCalendar feed. Omit platform for all platforms; subscribe in Google, Apple, or Outlook.",

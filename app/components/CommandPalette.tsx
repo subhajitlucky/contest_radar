@@ -12,6 +12,7 @@ import {
   LayoutGrid,
   LifeBuoy,
   Search,
+  UserRound,
 } from "lucide-react";
 import { PLATFORM_META, type PlatformKey } from "@/lib/contestService";
 
@@ -44,6 +45,7 @@ export default function CommandPalette() {
       { id: "contests", label: "All contests", hint: "Browse the schedule", keywords: "contests schedule upcoming", icon: CalendarDays, run: go("/contests") },
       { id: "alerts", label: "Set up alerts", hint: "Telegram and email", keywords: "alerts reminders notify telegram email", icon: Bell, run: go("/alerts") },
       { id: "practice", label: "Practice", hint: "Curated practice links", keywords: "practice problems dsa", icon: BookOpen, run: go("/practice") },
+      { id: "profile", label: "Rating profile", hint: "Codeforces history", keywords: "profile rating codeforces history", icon: UserRound, run: go("/profile") },
       { id: "about", label: "About", hint: "How it works", keywords: "about data sources", icon: Info, run: go("/about") },
       { id: "support", label: "Support", hint: "Keep it free", keywords: "support donation infra", icon: LifeBuoy, run: go("/support") },
       { id: "developers", label: "Developer API", hint: "Endpoints and docs", keywords: "api developers json docs", icon: Code2, run: go("/developers") },
