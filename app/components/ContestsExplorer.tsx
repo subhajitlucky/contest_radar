@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -11,6 +11,7 @@ import {
   LayoutGrid,
   Rows3,
   Search,
+  Star,
   X,
 } from "lucide-react";
 import {
@@ -26,6 +27,13 @@ import {
 } from "@/lib/contestService";
 import ContestCard from "./ContestCard";
 import Countdown from "./Countdown";
+import FavoriteButton from "./FavoriteButton";
+import {
+  contestKey,
+  getFavoritesSnapshot,
+  parseFavorites,
+  subscribeFavorites,
+} from "@/lib/favorites";
 
 type PlatformFilter = "all" | PlatformKey;
 type ViewMode = "agenda" | "grid";
@@ -46,6 +54,13 @@ export default function ContestsExplorer({
   const [query, setQuery] = useState(initialQuery);
   const [platform, setPlatform] = useState<PlatformFilter>(initialPlatform);
   const [view, setView] = useState<ViewMode>("agenda");
+  const [savedOnly, setSavedOnly] = useState(false);
+  const favoritesRaw = useSyncExternalStore(
+    subscribeFavorites,
+    getFavoritesSnapshot,
+    () => ""
+  );
+  const favorites = useMemo(() => parseFavorites(favoritesRaw), [favoritesRaw]);
   const [selected, setSelected] = useState<Contest | null>(() => {
     if (!initialHighlight) return null;
     return contests.find((contest) => `${contest.platformKey}:${contest.id}` === initialHighlight) ?? null;
@@ -90,11 +105,12 @@ export default function ContestsExplorer({
     return contests
       .filter((contest) => {
         if (platform !== "all" && contest.platformKey !== platform) return false;
+        if (savedOnly && !favorites.includes(contestKey(contest))) return false;
         if (!needle) return true;
         return `${contest.name} ${contest.platform} ${contest.type}`.toLowerCase().includes(needle);
       })
       .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-  }, [contests, platform, query]);
+  }, [contests, platform, query, savedOnly, favorites]);
 
   const live = filtered.filter((contest) => getContestStatus(contest.startTime, contest.endTime) === "live");
   const upcoming = filtered.filter((contest) => getContestStatus(contest.startTime, contest.endTime) === "upcoming");
@@ -110,7 +126,7 @@ export default function ContestsExplorer({
     return [...map.entries()];
   }, [upcoming]);
 
-  const hasFilters = platform !== "all" || query.trim().length > 0;
+  const hasFilters = platform !== "all" || query.trim().length > 0 || savedOnly;
 
   return (
     <div className="space-y-4">
@@ -141,6 +157,16 @@ export default function ContestsExplorer({
               >
                 All
                 <span className="opacity-60">{contests.length}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setSavedOnly((value) => !value)}
+                aria-pressed={savedOnly}
+                className={`chip shrink-0 ${savedOnly ? "chip-active" : ""}`}
+              >
+                <Star className="h-3 w-3" aria-hidden="true" />
+                Saved
+                <span className="opacity-60">{favorites.length}</span>
               </button>
               {PLATFORM_KEYS.map((key) => (
                 <button
@@ -197,6 +223,7 @@ export default function ContestsExplorer({
               onClick={() => {
                 setQuery("");
                 setPlatform("all");
+                setSavedOnly(false);
               }}
               className="text-[11px] font-medium text-muted underline underline-offset-4 hover:text-ink"
             >
@@ -249,6 +276,7 @@ export default function ContestsExplorer({
             onClick={() => {
               setQuery("");
               setPlatform("all");
+              setSavedOnly(false);
             }}
             className="btn btn-signal"
           >
@@ -327,15 +355,18 @@ export default function ContestsExplorer({
                 <span className="mr-2 inline-block platform-dot align-middle" aria-hidden="true" />
                 {selected.platform}
               </span>
-              <button
-                ref={closeRef}
-                type="button"
-                onClick={() => setSelected(null)}
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-line text-muted hover:text-ink"
-                aria-label="Close"
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-              </button>
+              <div className="flex items-center gap-1">
+                <FavoriteButton contestKey={contestKey(selected)} />
+                <button
+                  ref={closeRef}
+                  type="button"
+                  onClick={() => setSelected(null)}
+                  className="flex h-8 w-8 items-center justify-center rounded-md border border-line text-muted hover:text-ink"
+                  aria-label="Close"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
             </div>
 
             <h2 className="display mt-6 text-2xl font-semibold leading-tight tracking-tight">
@@ -382,6 +413,13 @@ export default function ContestsExplorer({
               <Link href="/alerts" className="btn btn-outline w-full">
                 <Bell className="h-4 w-4" aria-hidden="true" />
                 Set a reminder
+              </Link>
+              <Link
+                href={`/contests/${selected.platformKey}/${encodeURIComponent(String(selected.id))}`}
+                className="btn btn-ghost w-full"
+              >
+                View full page
+                <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
             </div>
           </aside>

@@ -78,6 +78,11 @@ CSCosmos handles explanations and interview prep.
 - [x] All visible times normalized to IST with a clear label.
 - [x] Removed decorative gradients, glows, radar rings, and glass effects in favor of a flat,
       typographic system designed to age well.
+- [x] **F10 favorites**: local saved contests, star actions, and a Saved filter.
+- [x] **F15 detail pages**: `/contests/[platform]/[id]` with canonical metadata and Event JSON-LD.
+- [x] **F18 API docs**: `/developers` with endpoints, examples, cache and attribution rules.
+- [x] **F20 extension scaffold**: `extension/` Manifest V3 popup for the next five contests.
+- [x] Removed unused legacy tracker components.
 
 ## Principles
 

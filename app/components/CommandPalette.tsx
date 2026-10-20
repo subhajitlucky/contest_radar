@@ -46,6 +46,7 @@ export default function CommandPalette() {
       { id: "practice", label: "Practice", hint: "Curated practice links", keywords: "practice problems dsa", icon: BookOpen, run: go("/practice") },
       { id: "about", label: "About", hint: "How it works", keywords: "about data sources", icon: Info, run: go("/about") },
       { id: "support", label: "Support", hint: "Keep it free", keywords: "support donation infra", icon: LifeBuoy, run: go("/support") },
+      { id: "developers", label: "Developer API", hint: "Endpoints and docs", keywords: "api developers json docs", icon: Code2, run: go("/developers") },
       ...(Object.keys(PLATFORM_META) as PlatformKey[]).map((key) => ({
         id: `platform-${key}`,
         label: `Filter: ${PLATFORM_META[key].name}`,

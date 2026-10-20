@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ContestRadar</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <p class="eyebrow">ContestRadar</p>
+        <h1>Next up</h1>
+      </div>
+      <button id="refresh" type="button" aria-label="Refresh">↻</button>
+    </header>
+
+    <main id="list" aria-live="polite">
+      <p class="status">Loading contests…</p>
+    </main>
+
+    <footer>
+      <a href="https://contestradar.vercel.app/contests" target="_blank" rel="noreferrer">
+        Open full schedule
+      </a>
+      <a href="https://contestradar.vercel.app/alerts" target="_blank" rel="noreferrer">
+        Alerts
+      </a>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

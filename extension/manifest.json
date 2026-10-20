@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "ContestRadar",
+  "version": "0.1.0",
+  "description": "The next five coding contests from Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ContestRadar"
+  },
+  "permissions": ["storage"],
+  "host_permissions": ["https://contestradar.vercel.app/*"]
+}

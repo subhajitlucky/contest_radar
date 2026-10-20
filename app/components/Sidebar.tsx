@@ -7,6 +7,7 @@ import {
   Bell,
   BookOpen,
   CalendarDays,
+  Code2,
   Command,
   Info,
   LayoutDashboard,
@@ -25,6 +26,7 @@ const MAIN = [
 
 const PROJECT = [
   { href: "/about", label: "About", icon: Info },
+  { href: "/developers", label: "Developers", icon: Code2 },
   { href: "/support", label: "Support", icon: LifeBuoy },
 ];
 

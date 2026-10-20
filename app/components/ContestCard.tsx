@@ -9,6 +9,8 @@ import {
   getGoogleCalendarUrl,
 } from "@/lib/contestService";
 import Countdown from "./Countdown";
+import FavoriteButton from "./FavoriteButton";
+import { contestKey } from "@/lib/favorites";
 
 export default function ContestCard({
   contest,
@@ -68,6 +70,7 @@ export default function ContestCard({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          <FavoriteButton contestKey={contestKey(contest)} />
           <a
             href={getGoogleCalendarUrl(contest)}
             target="_blank"
