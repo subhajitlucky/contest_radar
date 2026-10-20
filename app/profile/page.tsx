@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { UserRound } from "lucide-react";
+import { getSessionUser } from "@/lib/auth";
 import RatingLookup from "./RatingLookup";
+import SyncFavorites from "./SyncFavorites";
 
 export const metadata: Metadata = {
   title: "Profile - ContestRadar",
@@ -8,7 +11,11 @@ export const metadata: Metadata = {
     "Look up a Codeforces rating, contest history, and practice recommendations for the next round.",
 };
 
-export default function ProfilePage() {
+export const dynamic = "force-dynamic";
+
+export default async function ProfilePage() {
+  const user = await getSessionUser();
+
   return (
     <div>
       <section className="border-b border-line">
@@ -27,7 +34,41 @@ export default function ProfilePage() {
         </div>
       </section>
 
-      <section className="px-4 py-8 sm:px-6 lg:px-8">
+      <section className="px-4 pt-6 sm:px-6 lg:px-8">
+        <div className="panel flex flex-wrap items-center justify-between gap-3 p-4">
+          {user ? (
+            <>
+              <div>
+                <p className="eyebrow">Signed in</p>
+                <p className="mt-1 text-sm font-medium">{user.email}</p>
+              </div>
+              <form action="/api/auth/logout" method="post">
+                <button type="submit" className="btn btn-outline btn-sm">
+                  Sign out
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <div>
+                <p className="eyebrow">Account</p>
+                <p className="mt-1 text-sm text-muted">
+                  Sign in to sync favorites across devices.
+                </p>
+              </div>
+              <Link href="/login" className="btn btn-signal btn-sm">
+                Sign in
+              </Link>
+            </>
+          )}
+        </div>
+      </section>
+
+      <section className="px-4 py-4 sm:px-6 lg:px-8">
+        <SyncFavorites loggedIn={Boolean(user)} />
+      </section>
+
+      <section className="px-4 pb-8 sm:px-6 lg:px-8">
         <RatingLookup />
       </section>
     </div>

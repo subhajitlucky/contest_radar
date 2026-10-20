@@ -89,6 +89,9 @@ CSCosmos handles explanations and interview prep.
 - [x] **F06 web push**: service worker, VAPID subscribe route, push delivery in cron.
 - [x] **F07 Discord**: webhook subscription route, channel form, cron delivery.
 - [x] Push and Discord channels added to the alerts console.
+- [x] **F09 accounts**: passwordless email magic links, HttpOnly sessions, logout, and `/login`.
+- [x] Account-backed favorites sync (push/pull) from `/profile`.
+- [x] Auth schema in `db/auth.sql`; tested with a local Postgres end-to-end.
 - [x] Removed unused legacy tracker components.
 
 ## Principles

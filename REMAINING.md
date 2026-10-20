@@ -1,7 +1,7 @@
 # Contest Radar — What Remains
 
-Status snapshot: **14 of 20 planned features complete**, plus an unpublished extension
-scaffold.
+Status snapshot: **14 of 20 planned features complete**, plus two partials:
+account-backed favorites sync (alert settings not yet linked) and an unpublished extension.
 
 ## Shipped
 
@@ -15,6 +15,7 @@ scaffold.
 - App-shell UX redesign with light/dark themes and IST normalization.
 - Telegram and Discord alerts.
 - Browser push subscriptions with a service worker and cron delivery.
+- Passwordless email accounts, HttpOnly sessions, and favorites sync at `/login` and `/profile`.
 - Codeforces rating profile at `/profile` with rating chart and recent results.
 - Post-contest results/standings links.
 - Rating-based practice recommendations into CSCosmos.
@@ -23,7 +24,7 @@ scaffold.
 
 | ID | Feature | Priority | Depends on | Notes |
 | :--- | :--- | :--- | :--- | :--- |
-| F09 | Accounts + cross-device sync | P0 for retention | Auth + Postgres | Sync favorites, preferences, and alert settings. |
+| F09 | Account-linked alert settings | P0 for retention | Existing auth | Link alert subscriptions to user IDs so settings sync across devices. |
 | F12 | Participation streaks | P2 | F11 | Weekly contest streak and calendar heatmap. |
 | F17 | Leaderboards + college boards | P2 | F09, F11 | Opt-in aggregation and anti-gaming rules. |
 | F16 | Mock / virtual contests | P2 | Judge or external submission | Timer, scoring, history; highest-cost feature. |
@@ -44,10 +45,10 @@ scaffold.
 
 ## Critical path
 
-1. **Auth + Postgres** (F09) unlocks sync, leaderboards, and durable user profiles.
-2. **Streaks** (F12) become trivial once rating history is stored server-side.
+1. **Account-linked settings** (F09 remainder) unlocks alert sync and leaderboards.
+2. **Streaks** (F12) need stored rating history; add a per-user history table during ingestion.
 3. **Embed layout** (F19) and **mock contests** (F16) are separate tracks; do not block core alerts.
 
 ## Next batch
 
-F09 → F12 → F17, then F19, then F16.
+F09 remainder → F12 → F17, then F19, then F16.

@@ -99,6 +99,17 @@ stores the webhook and posts contest reminders through the existing cron sender.
 Re-run `db/alerts.sql` after upgrading; it adds push tables and the Discord channel
 constraint.
 
+## Accounts
+
+Accounts are passwordless email magic links. Run [`db/auth.sql`](./db/auth.sql) to create
+`users`, `login_tokens`, `sessions`, and `user_favorites`. Reuse the existing Postgres
+and Resend configuration.
+
+- `/login` requests a one-time link.
+- `/api/auth/verify` creates an HttpOnly session cookie.
+- `/api/user/favorites` syncs the local Saved list when signed in.
+- Sessions expire after 30 days; sign out from `/profile`.
+
 ## Telegram setup
 
 1. Create a bot with [BotFather](https://t.me/BotFather) and set `TELEGRAM_BOT_TOKEN`.
