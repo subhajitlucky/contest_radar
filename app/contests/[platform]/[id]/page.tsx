@@ -9,9 +9,9 @@ import {
   formatISTTime,
   getContestStatus,
   getGoogleCalendarUrl,
-  getUpcomingContests,
   type PlatformKey,
 } from "@/lib/contestService";
+import { getUpcomingContests } from "@/lib/contestSchedule";
 import Countdown from "@/app/components/Countdown";
 import FavoriteButton from "@/app/components/FavoriteButton";
 import { contestKey } from "@/lib/favorites";

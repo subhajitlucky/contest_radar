@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  PLATFORM_META,
-  getUpcomingContests,
-  type PlatformKey,
-} from "@/lib/contestService";
+import { PLATFORM_META, type PlatformKey } from "@/lib/contestService";
+import { getUpcomingContests } from "@/lib/contestSchedule";
 import { buildCalendar, toICSDate } from "@/lib/ics";
 
 export const dynamic = "force-dynamic";

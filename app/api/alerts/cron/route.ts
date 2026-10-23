@@ -10,7 +10,8 @@ import {
   siteUrl,
   type AlertSubscription,
 } from "@/lib/alerts";
-import { formatDuration, getUpcomingContests } from "@/lib/contestService";
+import { formatDuration } from "@/lib/contestService";
+import { getUpcomingContests } from "@/lib/contestSchedule";
 
 export const dynamic = "force-dynamic";
 

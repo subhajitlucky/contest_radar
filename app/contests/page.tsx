@@ -1,11 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, Radio } from "lucide-react";
-import {
-  PLATFORM_META,
-  getContestStats,
-  getUpcomingContests,
-  type PlatformKey,
-} from "@/lib/contestService";
+import { PLATFORM_META, type PlatformKey } from "@/lib/contestService";
+import { getContestStats, getUpcomingContests } from "@/lib/contestSchedule";
 import ContestsExplorer from "@/app/components/ContestsExplorer";
 
 export default async function ContestsPage({

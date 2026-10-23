@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getContestById } from '@/lib/contestService';
+import { getContestById } from '@/lib/contestSchedule';
 
 export const dynamic = 'force-dynamic';
 

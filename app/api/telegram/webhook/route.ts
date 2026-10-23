@@ -3,10 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   PLATFORM_META,
   formatDuration,
-  getContestStats,
-  getUpcomingContests,
   type PlatformKey,
 } from "@/lib/contestService";
+import { getContestStats, getUpcomingContests } from "@/lib/contestSchedule";
 import { formatIST, sendTelegramMessage } from "@/lib/alerts";
 import { getPool, isDatabaseConfigured } from "@/lib/db";
 

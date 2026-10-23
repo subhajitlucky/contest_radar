@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUpcomingContests, getContestsByPlatform } from '@/lib/contestService';
+import { getUpcomingContests, getContestsByPlatform } from '@/lib/contestSchedule';
 
 export const dynamic = 'force-dynamic'; // Always fetch fresh data
 

@@ -62,6 +62,24 @@ const ENDPOINTS = [
   },
   {
     method: "GET",
+    path: "/api/source-health",
+    description:
+      "Last attempt, last success, error, latency, and consecutive failures for each schedule source.",
+    sample: `{
+  "ok": true,
+  "data": [
+    {
+      "sourceKey": "codeforces",
+      "lastSuccessAt": "2026-10-23T10:15:00.000Z",
+      "latencyMs": 120,
+      "lastContestCount": 3,
+      "consecutiveFailures": 0
+    }
+  ]
+}`,
+  },
+  {
+    method: "GET",
     path: "/api/rating?handle=tourist",
     description:
       "Codeforces profile, max rating, contest count, best rank, and up to 30 rating changes.",

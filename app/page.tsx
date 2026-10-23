@@ -5,12 +5,11 @@ import {
   formatDuration,
   formatISTDate,
   formatISTTime,
-  getContestStats,
-  getUpcomingContests,
   istDayKey,
   type Contest,
   type PlatformKey,
 } from "@/lib/contestService";
+import { getContestStats, getUpcomingContests } from "@/lib/contestSchedule";
 import Countdown from "./components/Countdown";
 import NextContestPanel from "./components/NextContestPanel";
 

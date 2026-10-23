@@ -6,7 +6,7 @@ import Sidebar from "./components/Sidebar";
 import TopBar from "./components/TopBar";
 import MobileNav from "./components/MobileNav";
 import EmbedMode from "./components/EmbedMode";
-import { getUpcomingContests } from "@/lib/contestService";
+import { getUpcomingContests } from "@/lib/contestSchedule";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 

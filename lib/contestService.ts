@@ -1,24 +1,12 @@
-export type PlatformKey =
-  | "codeforces"
-  | "leetcode"
-  | "codechef"
-  | "atcoder"
-  | "hackerrank";
+import {
+  PLATFORM_META,
+  type Contest,
+  type PlatformKey,
+  type PlatformName,
+} from "./contestTypes";
 
-export type PlatformName =
-  | "Codeforces"
-  | "LeetCode"
-  | "CodeChef"
-  | "AtCoder"
-  | "HackerRank";
-
-export const PLATFORM_META: Record<PlatformKey, { name: PlatformName; url: string }> = {
-  codeforces: { name: "Codeforces", url: "https://codeforces.com/contests" },
-  leetcode: { name: "LeetCode", url: "https://leetcode.com/contest/" },
-  codechef: { name: "CodeChef", url: "https://www.codechef.com/contests" },
-  atcoder: { name: "AtCoder", url: "https://atcoder.jp/contests/" },
-  hackerrank: { name: "HackerRank", url: "https://www.hackerrank.com/contests" },
-};
+export { PLATFORM_META } from "./contestTypes";
+export type { Contest, PlatformKey, PlatformName, PlatformStats } from "./contestTypes";
 
 export interface CodeforcesContestAPI {
   id: number;
@@ -30,31 +18,6 @@ export interface CodeforcesContestAPI {
   startTimeSeconds?: number;
   relativeTimeSeconds?: number;
   organization?: string;
-}
-
-export interface Contest {
-  id: string | number;
-  name: string;
-  platform: PlatformName;
-  platformKey: PlatformKey;
-  startTime: string;
-  endTime: string;
-  duration: number;
-  type: string;
-  difficulty?: string;
-  participants?: number;
-  description?: string;
-  url: string;
-  phase: string;
-  isRegistrationOpen: boolean;
-}
-
-export interface PlatformStats {
-  platform: PlatformName;
-  platformKey: PlatformKey;
-  totalContests: number;
-  upcoming: number;
-  active: number;
 }
 
 const participantEstimates: Record<string, number> = {
@@ -458,19 +421,19 @@ async function fetchHackerRank(): Promise<Contest[]> {
     .filter((contest): contest is Contest => contest !== null);
 }
 
-export async function getUpcomingContests(): Promise<Contest[]> {
-  const adapters: Array<{ key: PlatformKey; run: () => Promise<Contest[]> }> = [
-    { key: "codeforces", run: fetchCodeforces },
-    { key: "leetcode", run: fetchLeetCode },
-    { key: "codechef", run: fetchCodeChef },
-    { key: "atcoder", run: fetchAtCoder },
-    { key: "hackerrank", run: fetchHackerRank },
-  ];
+export const CONTEST_ADAPTERS: Array<{ key: PlatformKey; run: () => Promise<Contest[]> }> = [
+  { key: "codeforces", run: fetchCodeforces },
+  { key: "leetcode", run: fetchLeetCode },
+  { key: "codechef", run: fetchCodeChef },
+  { key: "atcoder", run: fetchAtCoder },
+  { key: "hackerrank", run: fetchHackerRank },
+];
 
-  const results = await Promise.allSettled(adapters.map((adapter) => adapter.run()));
+export async function getLiveContests(): Promise<Contest[]> {
+  const results = await Promise.allSettled(CONTEST_ADAPTERS.map((adapter) => adapter.run()));
   const contests = results.flatMap((result, index) => {
     if (result.status === "fulfilled") return result.value;
-    console.error(`[ContestService] ${adapters[index].key} adapter failed:`, result.reason);
+    console.error(`[ContestService] ${CONTEST_ADAPTERS[index].key} adapter failed:`, result.reason);
     return [];
   });
 
@@ -489,70 +452,6 @@ export async function getUpcomingContests(): Promise<Contest[]> {
   return deduped.sort(
     (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
   );
-}
-
-export async function getContestStats(): Promise<{
-  totalContests: number;
-  upcoming: number;
-  active: number;
-  platforms: PlatformStats[];
-  next24h: number;
-}> {
-  const contests = await getUpcomingContests();
-  const now = new Date();
-  const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-
-  const upcoming = contests.filter((contest) => new Date(contest.startTime) > now).length;
-  const active = contests.filter(
-    (contest) =>
-      new Date(contest.startTime) <= now && new Date(contest.endTime) >= now
-  ).length;
-  const next24h = contests.filter((contest) => {
-    const start = new Date(contest.startTime);
-    return start > now && start <= in24h;
-  }).length;
-
-  const platforms = (Object.keys(PLATFORM_META) as PlatformKey[])
-    .map((key) => {
-      const platformContests = contests.filter((contest) => contest.platformKey === key);
-      return {
-        platform: PLATFORM_META[key].name,
-        platformKey: key,
-        totalContests: platformContests.length,
-        upcoming: platformContests.filter((contest) => new Date(contest.startTime) > now).length,
-        active: platformContests.filter(
-          (contest) =>
-            new Date(contest.startTime) <= now && new Date(contest.endTime) >= now
-        ).length,
-      };
-    })
-    .filter((platform) => platform.totalContests > 0);
-
-  return {
-    totalContests: contests.length,
-    upcoming,
-    active,
-    platforms,
-    next24h,
-  };
-}
-
-export async function getContestById(id: string): Promise<Contest | null> {
-  const contests = await getUpcomingContests();
-  return (
-    contests.find(
-      (contest) =>
-        String(contest.id) === String(id) ||
-        `${contest.platformKey}:${contest.id}` === String(id)
-    ) || null
-  );
-}
-
-export async function getContestsByPlatform(platformKey: string): Promise<Contest[]> {
-  const contests = await getUpcomingContests();
-  const key = platformKey.toLowerCase() as PlatformKey;
-  if (!(key in PLATFORM_META)) return contests;
-  return contests.filter((contest) => contest.platformKey === key);
 }
 
 export async function getAvailablePlatforms(): Promise<string[]> {

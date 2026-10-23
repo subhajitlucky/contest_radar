@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getContestStats } from '@/lib/contestService';
+import { getContestStats } from '@/lib/contestSchedule';
 
 export const dynamic = 'force-dynamic';
 

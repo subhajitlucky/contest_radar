@@ -3,9 +3,9 @@ import {
   PLATFORM_META,
   formatISTDate,
   formatISTTime,
-  getUpcomingContests,
   type PlatformKey,
 } from "@/lib/contestService";
+import { getUpcomingContests } from "@/lib/contestSchedule";
 
 export const revalidate = 300;
 

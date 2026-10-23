@@ -5,6 +5,7 @@ LeetCode, CodeChef, AtCoder, and HackerRank in one live schedule — with calend
 feeds, a Telegram bot, and no paywalls.
 
 - Live: https://contestradar.vercel.app
+- Architecture: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
 - Roadmap: [FEATURES.md](./FEATURES.md)
 - Support: [SUPPORT.md](./SUPPORT.md)
 
@@ -20,8 +21,8 @@ feeds, a Telegram bot, and no paywalls.
 ## Stack
 
 - Next.js 16 App Router, React 19, TypeScript, Tailwind CSS.
-- Server components + route handlers; no database required for the current feature set.
-- Data adapters in `lib/contestService.ts`.
+- Server components + route handlers; Postgres is required for persisted schedules, accounts, and alerts.
+- Data adapters in `lib/contestService.ts`; schedule storage in `lib/contestStore.ts`.
 
 ## Data sources
 
@@ -85,6 +86,27 @@ Alerts need a Postgres database and an email provider. Both have free tiers.
 
 If these variables are missing, Telegram and calendar feeds still work; email
 subscription returns an honest `503` instead of failing silently.
+
+## Contest schedule storage
+
+The schedule works live without a database. To persist contests, snapshots, and
+source health, run:
+
+```bash
+psql "$DATABASE_URL" -f db/contests.sql
+```
+
+When `DATABASE_URL` is set:
+
+- `/api/cron/refresh-contests` fetches every adapter, upserts normalized contests,
+  records snapshot changes, and updates source health.
+- Pages read the stored schedule first and fall back to live adapters if the database
+  is empty or unavailable.
+- `/api/source-health` returns per-source last success, last error, latency, and
+  consecutive failures.
+- `.github/workflows/contests.yml` triggers the refresh every 15 minutes.
+
+`CRON_SECRET` protects both the alert sender and the contest refresh endpoint.
 
 ## Browser push and Discord
 
