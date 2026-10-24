@@ -48,8 +48,8 @@ export default async function LoginPage({
               <p className="text-sm text-muted">Signed in as</p>
               <p className="text-lg font-semibold">{user.email}</p>
               <div className="flex flex-wrap gap-2">
-                <Link href="/profile" className="btn btn-signal">
-                  Open profile
+                <Link href="/dashboard" className="btn btn-signal">
+                  Open dashboard
                 </Link>
                 <form action="/api/auth/logout" method="post">
                   <button type="submit" className="btn btn-outline">

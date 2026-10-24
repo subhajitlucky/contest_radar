@@ -18,6 +18,14 @@ feeds, a Telegram bot, and no paywalls.
 - Contest detail data via `/api/contests/[id]`, stats via `/api/stats`.
 - Light/dark styling, sitemap, robots, and a responsive layout.
 
+## Public site and dashboard
+
+- **Public** — `/` (homepage), `/contests`, `/practice`, `/alerts`,
+  `/leaderboard`, `/about`, `/developers`, `/support`, `/privacy`, `/login`.
+  These use the public header and footer.
+- **Signed in** — `/dashboard` and `/profile` require an account and use the app
+  shell (sidebar, top bar, mobile navigation).
+
 ## Stack
 
 - Next.js 16 App Router, React 19, TypeScript, Tailwind CSS.

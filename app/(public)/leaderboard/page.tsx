@@ -83,8 +83,8 @@ export default async function LeaderboardPage() {
               Link a Codeforces handle and opt in from your profile. Only your handle,
               rating, contest count, and streak are shown.
             </p>
-            <Link href="/profile" className="btn btn-signal btn-sm">
-              Open profile
+            <Link href="/login" className="btn btn-signal btn-sm">
+              Sign in to join
             </Link>
           </div>
         ) : (

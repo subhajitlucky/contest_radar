@@ -47,15 +47,19 @@ currently logs the failure and returns an empty list for that source.
 
 ## Pages and rendering
 
-- `/` — command center: next contest, next 24h, seven-day agenda, platform pulse.
-- `/contests` — agenda-first schedule with filters, search, and a detail drawer.
-- `/contests/[platform]/[id]` — shareable contest page with Event JSON-LD.
-- `/profile` — accounts, favorites sync, Codeforces rating history, streak.
-- `/leaderboard` — opt-in rating/streak ranking.
-- `/virtual` — timed virtual contest over past Codeforces rounds.
-- `/alerts` — channel console for Telegram, Discord, email, push, and calendar.
-- `/developers` — public API documentation.
-- `/embed/calendar` — compact calendar that hides the app shell.
+The site uses two route groups with different shells:
+
+- **Public** (`app/(public)`) — public header and footer, no sidebar. Routes:
+  `/`, `/contests`, `/contests/[platform]/[id]`, `/practice`, `/alerts`,
+  `/leaderboard`, `/about`, `/developers`, `/support`, `/privacy`, and `/login`.
+- **App** (`app/(app)`) — sidebar, top bar, mobile navigation, and an auth gate.
+  Routes: `/dashboard` (the command center) and `/profile`.
+
+`/` is the public homepage: live next contest, platform coverage, product overview,
+and FAQ. `/dashboard` is the signed-in command center with the next contest, next 24h,
+seven-day agenda, and platform pulse.
+
+`/embed/calendar` renders outside both groups with no site shell.
 
 ## Database
 

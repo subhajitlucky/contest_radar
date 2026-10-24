@@ -11,7 +11,7 @@ import Countdown from "./Countdown";
 
 export default function NextContestPanel({ contest }: { contest: Contest }) {
   return (
-    <section className="panel p-6 sm:p-7" data-platform={contest.platformKey} aria-label="Next contest">
+    <section className="panel min-w-0 p-6 sm:p-7" data-platform={contest.platformKey} aria-label="Next contest">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <span className="platform-dot" aria-hidden="true" />

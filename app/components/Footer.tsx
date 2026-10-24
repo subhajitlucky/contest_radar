@@ -5,10 +5,9 @@ import { PLATFORM_META, type PlatformKey } from "@/lib/contestService";
 const PRODUCT = [
   { href: "/contests", label: "All contests" },
   { href: "/alerts", label: "Alerts" },
-  { href: "/virtual", label: "Virtual contest" },
   { href: "/practice", label: "Practice" },
+  { href: "/virtual", label: "Virtual contest" },
   { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/profile", label: "Profile" },
 ];
 
 const PROJECT = [
@@ -18,10 +17,10 @@ const PROJECT = [
   { href: "/privacy", label: "Privacy" },
 ];
 
-export default function Footer() {
+export default function Footer({ mobileNav = true }: { mobileNav?: boolean }) {
   return (
     <footer className="app-footer mt-12 border-t border-line">
-      <div className="shell py-12 pb-24 lg:pb-12">
+      <div className={`shell py-12 ${mobileNav ? "pb-24 lg:pb-12" : "pb-12"}`}>
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr] lg:gap-12">
           <div>
             <p className="text-base font-semibold tracking-tight">ContestRadar</p>

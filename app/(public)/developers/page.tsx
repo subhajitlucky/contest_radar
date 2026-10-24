@@ -147,8 +147,8 @@ export default function DevelopersPage() {
       </section>
 
       <section className="px-4 py-8 sm:px-6 lg:px-8">
-        <div className="grid gap-4 lg:grid-cols-[240px_1fr]">
-          <aside className="panel h-fit p-5">
+        <div className="grid min-w-0 gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
+          <aside className="panel h-fit min-w-0 p-5">
             <p className="eyebrow">Base URL</p>
             <code className="mt-2 block break-all rounded-md border border-line bg-panel-2 px-3 py-2 font-mono text-[11px]">
               https://contestradar.vercel.app
@@ -168,7 +168,7 @@ export default function DevelopersPage() {
             </a>
           </aside>
 
-          <div className="space-y-3">
+          <div className="min-w-0 space-y-3">
             {ENDPOINTS.map((endpoint) => (
               <article key={endpoint.path} className="panel p-5">
                 <div className="flex flex-wrap items-center gap-2">
@@ -176,7 +176,10 @@ export default function DevelopersPage() {
                   <code className="mono break-all text-[12px] font-medium">{endpoint.path}</code>
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{endpoint.description}</p>
-                <pre className="mt-3 overflow-x-auto rounded-md border border-line bg-panel-2 p-3 font-mono text-[10px] leading-relaxed text-muted">
+                <pre
+                  style={{ overflowX: "auto" }}
+                  className="mt-3 rounded-md border border-line bg-panel-2 p-3 font-mono text-[10px] leading-relaxed text-muted"
+                >
                   {endpoint.sample}
                 </pre>
               </article>

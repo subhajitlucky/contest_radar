@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Bell, BookOpen, CalendarDays, LayoutDashboard } from "lucide-react";
 
 const ITEMS = [
-  { href: "/", label: "Overview", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/contests", label: "Schedule", icon: CalendarDays },
   { href: "/alerts", label: "Alerts", icon: Bell },
   { href: "/practice", label: "Practice", icon: BookOpen },

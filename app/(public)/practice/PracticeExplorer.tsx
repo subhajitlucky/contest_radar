@@ -65,7 +65,7 @@ export default function PracticeExplorer({
 
   return (
     <div>
-      <div className="sticky top-14 z-20 -mx-4 border-b border-line bg-background/95 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="sticky top-16 z-20 -mx-4 border-b border-line bg-background/95 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex gap-1 overflow-x-auto py-2" role="tablist" aria-label="Practice sections">
           {TABS.map((item) => {
             const Icon = item.icon;

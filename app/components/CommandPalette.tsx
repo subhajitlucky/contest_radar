@@ -43,7 +43,7 @@ export default function CommandPalette() {
     };
 
     return [
-      { id: "home", label: "Home", hint: "Live radar", keywords: "home start radar", icon: LayoutGrid, run: go("/") },
+      { id: "overview", label: "Overview", hint: "Your radar", keywords: "home start radar overview", icon: LayoutGrid, run: go("/dashboard") },
       { id: "contests", label: "All contests", hint: "Browse the schedule", keywords: "contests schedule upcoming", icon: CalendarDays, run: go("/contests") },
       { id: "alerts", label: "Set up alerts", hint: "Telegram and email", keywords: "alerts reminders notify telegram email", icon: Bell, run: go("/alerts") },
       { id: "practice", label: "Practice", hint: "Curated practice links", keywords: "practice problems dsa", icon: BookOpen, run: go("/practice") },

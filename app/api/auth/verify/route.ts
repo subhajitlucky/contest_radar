@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(new URL("/login?error=expired", request.url));
     }
 
-    return NextResponse.redirect(new URL("/profile?login=1", request.url));
+    return NextResponse.redirect(new URL("/dashboard?login=1", request.url));
   } catch (error) {
     console.error("[auth/verify] failed:", error);
     return NextResponse.redirect(new URL("/login?error=failed", request.url));

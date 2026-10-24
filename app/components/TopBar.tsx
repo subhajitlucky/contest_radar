@@ -6,12 +6,16 @@ import { ArrowUpRight, Command } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
 const TITLES: Record<string, string> = {
-  "/": "Overview",
+  "/dashboard": "Overview",
   "/contests": "Schedule",
   "/alerts": "Alerts",
   "/practice": "Practice",
+  "/virtual": "Virtual contest",
+  "/profile": "Profile",
+  "/leaderboard": "Leaderboard",
   "/about": "About",
   "/support": "Support",
+  "/developers": "Developers",
 };
 
 export default function TopBar() {

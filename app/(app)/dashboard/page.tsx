@@ -10,8 +10,8 @@ import {
   type PlatformKey,
 } from "@/lib/contestService";
 import { getContestStats, getUpcomingContests } from "@/lib/contestSchedule";
-import Countdown from "./components/Countdown";
-import NextContestPanel from "./components/NextContestPanel";
+import Countdown from "@/app/components/Countdown";
+import NextContestPanel from "@/app/components/NextContestPanel";
 
 export const revalidate = 300;
 
@@ -83,7 +83,7 @@ export default async function Home() {
             </div>
           )}
 
-          <section className="panel p-5" aria-label="Next 24 hours">
+          <section className="panel min-w-0 p-5" aria-label="Next 24 hours">
             <div className="flex items-center justify-between">
               <p className="eyebrow">Next 24 hours</p>
               <span className="mono text-[11px] text-muted">{next24.length}</span>
