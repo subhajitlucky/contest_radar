@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPool, isDatabaseConfigured } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
+import { clientKey, rateLimit, rateLimitResponse } from "@/lib/rateLimit";
 import { isSameOriginRequest } from "@/lib/requestOrigin";
 
 export const dynamic = "force-dynamic";
@@ -12,6 +13,11 @@ export async function POST(request: NextRequest) {
 
   if (!isDatabaseConfigured()) {
     return NextResponse.json({ ok: false, error: "Accounts are not configured." }, { status: 503 });
+  }
+
+  const limit = await rateLimit("leaderboard-settings", clientKey(request), 20, 600);
+  if (!limit.ok) {
+    return rateLimitResponse(limit);
   }
 
   const user = await getSessionUser();

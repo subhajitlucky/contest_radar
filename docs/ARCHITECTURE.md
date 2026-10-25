@@ -64,7 +64,7 @@ seven-day agenda, and platform pulse.
 
 ## Database
 
-Schema files: `db/contests.sql`, `db/alerts.sql`, `db/auth.sql`.
+Schema files: `db/contests.sql`, `db/alerts.sql`, `db/auth.sql`, `db/rate_limits.sql`.
 
 | Table | Purpose |
 | :--- | :--- |
@@ -80,6 +80,7 @@ Schema files: `db/contests.sql`, `db/alerts.sql`, `db/auth.sql`.
 | `sessions` | Hashed HttpOnly session tokens |
 | `user_favorites` | Account-synced saved contests |
 | `user_contest_history` | Stored Codeforces rating changes for streaks and leaderboards |
+| `rate_limits` | Per-IP request counters for browser-facing mutation routes |
 
 ## Contest schedule storage
 
@@ -133,6 +134,14 @@ GitHub Actions triggers the route every five minutes.
 - The schedule cache uses five-minute revalidation.
 - Source health is persisted; an empty refresh does not wipe the last-known schedule.
 - Known gap: AtCoder HTML backoff, circuit breaking, and `Retry-After` handling.
+
+## Security
+
+- Production CSP plus `nosniff`, referrer, and permissions headers.
+- Same-origin checks on browser-facing POST routes.
+- Per-IP rate limits for auth, alert, push, favorites, and profile mutations.
+- Discord webhooks are restricted to Discord hosts.
+- Push subscriptions require public HTTPS endpoints; loopback and private hosts are rejected.
 
 ## Deployment
 

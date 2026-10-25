@@ -3,6 +3,7 @@ import { getPool, isDatabaseConfigured } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { normalizeLeadMinutes, normalizePlatforms } from "@/lib/alerts";
 import { isSafePushEndpoint } from "@/lib/pushEndpoint";
+import { clientKey, rateLimit, rateLimitResponse } from "@/lib/rateLimit";
 import { isSameOriginRequest } from "@/lib/requestOrigin";
 
 export const dynamic = "force-dynamic";
@@ -22,6 +23,11 @@ export async function POST(request: NextRequest) {
       { ok: false, error: "Push storage is not configured yet." },
       { status: 503 }
     );
+  }
+
+  const limit = await rateLimit("push-subscribe", clientKey(request), 20, 600);
+  if (!limit.ok) {
+    return rateLimitResponse(limit);
   }
 
   if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {

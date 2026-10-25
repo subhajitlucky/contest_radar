@@ -117,6 +117,12 @@ When `DATABASE_URL` is set:
 
 `CRON_SECRET` protects both the alert sender and the contest refresh endpoint.
 
+## Rate limits
+
+Run `db/rate_limits.sql` once. The app applies per-IP limits to auth requests,
+alert and push subscriptions, Discord setup, favorites sync, Codeforces linking,
+and leaderboard settings. Old counters are cleaned up by the contest refresh cron.
+
 ## Browser push and Discord
 
 Generate VAPID keys with `npx web-push generate-vapid-keys`, then set

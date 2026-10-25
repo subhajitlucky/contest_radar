@@ -9,6 +9,7 @@ import {
   sendAlertEmail,
   siteUrl,
 } from "@/lib/alerts";
+import { clientKey, rateLimit, rateLimitResponse } from "@/lib/rateLimit";
 import { isSameOriginRequest } from "@/lib/requestOrigin";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +24,11 @@ export async function POST(request: NextRequest) {
       { ok: false, error: "Alert database is not configured yet." },
       { status: 503 }
     );
+  }
+
+  const limit = await rateLimit("alerts-subscribe", clientKey(request), 10, 600);
+  if (!limit.ok) {
+    return rateLimitResponse(limit);
   }
 
   if (!process.env.RESEND_API_KEY || !process.env.ALERT_FROM_EMAIL) {

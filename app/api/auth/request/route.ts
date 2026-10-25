@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPool, isDatabaseConfigured } from "@/lib/db";
 import { isValidEmail } from "@/lib/alerts";
 import { requestMagicLink } from "@/lib/auth";
+import { clientKey, rateLimit, rateLimitResponse } from "@/lib/rateLimit";
 import { isSameOriginRequest } from "@/lib/requestOrigin";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +17,11 @@ export async function POST(request: NextRequest) {
       { ok: false, error: "Accounts are not configured yet." },
       { status: 503 }
     );
+  }
+
+  const limit = await rateLimit("auth-request", clientKey(request), 10, 600);
+  if (!limit.ok) {
+    return rateLimitResponse(limit);
   }
 
   if (!process.env.RESEND_API_KEY || !process.env.ALERT_FROM_EMAIL) {

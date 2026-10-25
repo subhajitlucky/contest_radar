@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { refreshContests } from "@/lib/contestSchedule";
 import { isDatabaseConfigured } from "@/lib/db";
+import { cleanupRateLimits } from "@/lib/rateLimit";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -27,6 +28,12 @@ export async function GET(request: NextRequest) {
   }
 
   const results = await refreshContests();
+
+  try {
+    await cleanupRateLimits();
+  } catch (error) {
+    console.error("[cron/refresh-contests] rate-limit cleanup failed:", error);
+  }
 
   return NextResponse.json({
     ok: results.every((result) => result.ok),
