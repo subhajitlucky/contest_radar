@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPool, isDatabaseConfigured } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { normalizeLeadMinutes, normalizePlatforms } from "@/lib/alerts";
+import { isSameOriginRequest } from "@/lib/requestOrigin";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,10 @@ function validDiscordWebhook(value: string): boolean {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ ok: false, error: "Invalid request origin." }, { status: 403 });
+  }
+
   if (!isDatabaseConfigured()) {
     return NextResponse.json(
       { ok: false, error: "Alert database is not configured yet." },

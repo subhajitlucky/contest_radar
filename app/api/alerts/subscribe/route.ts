@@ -9,10 +9,15 @@ import {
   sendAlertEmail,
   siteUrl,
 } from "@/lib/alerts";
+import { isSameOriginRequest } from "@/lib/requestOrigin";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ ok: false, error: "Invalid request origin." }, { status: 403 });
+  }
+
   if (!isDatabaseConfigured()) {
     return NextResponse.json(
       { ok: false, error: "Alert database is not configured yet." },

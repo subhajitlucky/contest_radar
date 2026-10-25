@@ -2,10 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPool, isDatabaseConfigured } from "@/lib/db";
 import { isValidEmail } from "@/lib/alerts";
 import { requestMagicLink } from "@/lib/auth";
+import { isSameOriginRequest } from "@/lib/requestOrigin";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ ok: false, error: "Invalid request origin." }, { status: 403 });
+  }
+
   if (!isDatabaseConfigured()) {
     return NextResponse.json(
       { ok: false, error: "Accounts are not configured yet." },

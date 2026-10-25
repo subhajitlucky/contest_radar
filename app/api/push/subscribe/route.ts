@@ -3,6 +3,7 @@ import { getPool, isDatabaseConfigured } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { normalizeLeadMinutes, normalizePlatforms } from "@/lib/alerts";
 import { isSafePushEndpoint } from "@/lib/pushEndpoint";
+import { isSameOriginRequest } from "@/lib/requestOrigin";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,10 @@ interface PushSubscriptionPayload {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ ok: false, error: "Invalid request origin." }, { status: 403 });
+  }
+
   if (!isDatabaseConfigured()) {
     return NextResponse.json(
       { ok: false, error: "Push storage is not configured yet." },
