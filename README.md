@@ -100,11 +100,15 @@ subscription returns an honest `503` instead of failing silently.
 ## Contest schedule storage
 
 The schedule works live without a database. To persist contests, snapshots, and
-source health, run:
+source health, apply the migrations:
 
 ```bash
-psql "$DATABASE_URL" -f db/contests.sql
+DATABASE_URL="postgres://..." npm run db:migrate
 ```
+
+The script applies every `db/*.sql` file once and records it in
+`schema_migrations`. Manual `psql -f db/contests.sql` still works, but the script is
+the supported path.
 
 When `DATABASE_URL` is set:
 

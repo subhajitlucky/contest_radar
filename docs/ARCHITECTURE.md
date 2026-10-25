@@ -64,7 +64,10 @@ seven-day agenda, and platform pulse.
 
 ## Database
 
-Schema files: `db/contests.sql`, `db/alerts.sql`, `db/auth.sql`, `db/rate_limits.sql`.
+Schema files: `db/contests.sql`, `db/alerts.sql`, `db/auth.sql`,
+`db/rate_limits.sql`, and `db/schema_migrations.sql`. Run them with
+`DATABASE_URL=... npm run db:migrate`; the script records applied files and is
+idempotent.
 
 | Table | Purpose |
 | :--- | :--- |
