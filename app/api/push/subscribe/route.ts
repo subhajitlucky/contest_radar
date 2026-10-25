@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPool, isDatabaseConfigured } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { normalizeLeadMinutes, normalizePlatforms } from "@/lib/alerts";
+import { isSafePushEndpoint } from "@/lib/pushEndpoint";
 
 export const dynamic = "force-dynamic";
 
@@ -42,14 +43,7 @@ export async function POST(request: NextRequest) {
   const p256dh = typeof subscription?.keys?.p256dh === "string" ? subscription.keys.p256dh : "";
   const auth = typeof subscription?.keys?.auth === "string" ? subscription.keys.auth : "";
 
-  let endpointUrl: URL | null = null;
-  try {
-    endpointUrl = new URL(endpoint);
-  } catch {
-    endpointUrl = null;
-  }
-
-  if (!endpointUrl || !["https:", "http:"].includes(endpointUrl.protocol) || !p256dh || !auth) {
+  if (!isSafePushEndpoint(endpoint) || !p256dh || !auth) {
     return NextResponse.json(
       { ok: false, error: "Invalid push subscription." },
       { status: 400 }
