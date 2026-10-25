@@ -9,10 +9,13 @@ import {
 import { isDatabaseConfigured } from "./db";
 import {
   readContestsFromDb,
+  readSourceHealth,
   recordSourceFailure,
   recordSourceSuccess,
   syncContestsForSource,
+  type SourceHealth,
 } from "./contestStore";
+import { isCircuitOpen } from "./sourceCircuit";
 
 export async function getUpcomingContests(): Promise<Contest[]> {
   if (isDatabaseConfigured()) {
@@ -103,8 +106,29 @@ export type RefreshSourceResult = {
 };
 
 export async function refreshContests(): Promise<RefreshSourceResult[]> {
+  let healthBySource = new Map<string, SourceHealth>();
+
+  if (isDatabaseConfigured()) {
+    try {
+      const health = await readSourceHealth();
+      healthBySource = new Map(health.map((source) => [source.sourceKey, source]));
+    } catch (error) {
+      console.error("[ContestSchedule] Could not read source health:", error);
+    }
+  }
+
   return Promise.all(
     CONTEST_ADAPTERS.map(async (adapter): Promise<RefreshSourceResult> => {
+      if (isCircuitOpen(healthBySource.get(adapter.key))) {
+        return {
+          source: adapter.key,
+          ok: false,
+          count: 0,
+          latencyMs: 0,
+          error: "Circuit open; retrying after cooldown",
+        };
+      }
+
       const startedAt = Date.now();
       let contests: Contest[];
 

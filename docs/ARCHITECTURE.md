@@ -126,6 +126,7 @@ GitHub Actions triggers the route every five minutes.
 
 - Adapter failures are isolated.
 - Adapter fetches use timeouts, bounded retries, `Retry-After`, and exponential backoff.
+- Five consecutive failures open a 15-minute circuit for that source.
 - Alert delivery is idempotent.
 - Push endpoints returning 404/410 are removed.
 - Auth lookups fail closed.
