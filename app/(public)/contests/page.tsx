@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight, Radio } from "lucide-react";
 import { PLATFORM_META, type PlatformKey } from "@/lib/contestService";
 import { getContestStats, getUpcomingContests } from "@/lib/contestSchedule";
+import { getTimeZone } from "@/lib/timezoneServer";
 import ContestsExplorer from "@/app/components/ContestsExplorer";
 
 export default async function ContestsPage({
@@ -14,7 +15,11 @@ export default async function ContestsPage({
     params.platform && params.platform in PLATFORM_META
       ? (params.platform as PlatformKey)
       : "all";
-  const [contests, stats] = await Promise.all([getUpcomingContests(), getContestStats()]);
+  const [contests, stats, timeZone] = await Promise.all([
+    getUpcomingContests(),
+    getContestStats(),
+    getTimeZone(),
+  ]);
 
   return (
     <div>
@@ -61,6 +66,7 @@ export default async function ContestsPage({
           initialPlatform={initialPlatform}
           initialQuery={typeof params.q === "string" ? params.q : ""}
           initialHighlight={typeof params.highlight === "string" ? params.highlight : undefined}
+          timeZone={timeZone}
         />
       </section>
     </div>

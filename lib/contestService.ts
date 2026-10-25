@@ -5,6 +5,7 @@ import {
   type PlatformName,
 } from "./contestTypes";
 import { fetchWithRetry } from "./fetchWithRetry";
+import { DEFAULT_TIME_ZONE, timeZoneLabel } from "./timezone";
 
 export { PLATFORM_META } from "./contestTypes";
 export type { Contest, PlatformKey, PlatformName, PlatformStats } from "./contestTypes";
@@ -495,9 +496,10 @@ export function getContestStatus(startTime: string, endTime: string): "upcoming"
   return "ended";
 }
 
-const IST = "Asia/Kolkata";
-
-export function formatContestDate(dateString: string): string {
+export function formatContestDate(
+  dateString: string,
+  timeZone = DEFAULT_TIME_ZONE,
+): string {
   const date = new Date(dateString);
   return `${date.toLocaleString("en-US", {
     month: "short",
@@ -506,23 +508,29 @@ export function formatContestDate(dateString: string): string {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
-    timeZone: IST,
-  })} IST`;
+    timeZone,
+  })} ${timeZoneLabel(timeZone)}`;
 }
 
-export function formatISTDate(dateString: string): string {
+export function formatDate(
+  dateString: string,
+  timeZone = DEFAULT_TIME_ZONE,
+): string {
   return new Date(dateString).toLocaleDateString("en-IN", {
-    timeZone: IST,
+    timeZone,
     weekday: "short",
     month: "short",
     day: "numeric",
   });
 }
 
-export function formatISTTime(dateString: string): string {
+export function formatTime(
+  dateString: string,
+  timeZone = DEFAULT_TIME_ZONE,
+): string {
   return new Date(dateString)
     .toLocaleTimeString("en-IN", {
-      timeZone: IST,
+      timeZone,
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
@@ -530,13 +538,28 @@ export function formatISTTime(dateString: string): string {
     .toUpperCase();
 }
 
-export function istDayKey(dateString: string): string {
+export function dayKey(
+  dateString: string,
+  timeZone = DEFAULT_TIME_ZONE,
+): string {
   return new Intl.DateTimeFormat("en-CA", {
-    timeZone: IST,
+    timeZone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
   }).format(new Date(dateString));
+}
+
+export function formatISTDate(dateString: string): string {
+  return formatDate(dateString, DEFAULT_TIME_ZONE);
+}
+
+export function formatISTTime(dateString: string): string {
+  return formatTime(dateString, DEFAULT_TIME_ZONE);
+}
+
+export function istDayKey(dateString: string): string {
+  return dayKey(dateString, DEFAULT_TIME_ZONE);
 }
 
 function toCalendarDate(iso: string): string {

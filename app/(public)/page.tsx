@@ -11,12 +11,14 @@ import {
 import Countdown from "@/app/components/Countdown";
 import {
   PLATFORM_META,
+  formatDate,
   formatDuration,
-  formatISTDate,
-  formatISTTime,
+  formatTime,
   type PlatformKey,
 } from "@/lib/contestService";
 import { getContestStats, getUpcomingContests } from "@/lib/contestSchedule";
+import { getTimeZone } from "@/lib/timezoneServer";
+import { timeZoneLabel } from "@/lib/timezone";
 
 const PLATFORM_KEYS = Object.keys(PLATFORM_META) as PlatformKey[];
 
@@ -80,7 +82,11 @@ function nowMs() {
 }
 
 export default async function PublicHomePage() {
-  const [contests, stats] = await Promise.all([getUpcomingContests(), getContestStats()]);
+  const [contests, stats, timeZone] = await Promise.all([
+    getUpcomingContests(),
+    getContestStats(),
+    getTimeZone(),
+  ]);
   const now = nowMs();
   const upcoming = contests.filter((contest) => new Date(contest.startTime).getTime() > now);
   const next = upcoming[0] ?? contests[0];
@@ -153,7 +159,8 @@ export default async function PublicHomePage() {
                     {next.name}
                   </h2>
                   <p className="mt-2 text-sm text-muted">
-                    {formatISTDate(next.startTime)} · {formatISTTime(next.startTime)} IST ·{" "}
+                    {formatDate(next.startTime, timeZone)} ·{" "}
+                    {formatTime(next.startTime, timeZone)} {timeZoneLabel(timeZone)} ·{" "}
                     {formatDuration(next.duration)}
                   </p>
 
@@ -194,7 +201,7 @@ export default async function PublicHomePage() {
                           {contest.name}
                         </span>
                         <span className="mono block text-[10px] uppercase tracking-wider text-muted">
-                          {formatISTTime(contest.startTime)} IST
+                          {formatTime(contest.startTime, timeZone)} {timeZoneLabel(timeZone)}
                         </span>
                       </span>
                       <Countdown

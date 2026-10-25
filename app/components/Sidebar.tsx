@@ -19,6 +19,7 @@ import {
 import { PLATFORM_META, type Contest, type PlatformKey } from "@/lib/contestService";
 import Countdown from "./Countdown";
 import ThemeToggle from "./ThemeToggle";
+import TimezoneSelect from "./TimezoneSelect";
 
 const NAV_GROUPS = [
   {
@@ -151,6 +152,10 @@ export default function Sidebar({ nextContest }: { nextContest: Contest | null }
             />
           </Link>
         )}
+
+        <div className="mt-3">
+          <TimezoneSelect />
+        </div>
 
         <div className="mt-3 flex items-center justify-between">
           <button

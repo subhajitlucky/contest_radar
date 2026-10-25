@@ -2,14 +2,16 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Bell, CalendarDays } from "lucide-react";
 import {
   PLATFORM_META,
+  dayKey,
+  formatDate,
   formatDuration,
-  formatISTDate,
-  formatISTTime,
-  istDayKey,
+  formatTime,
   type Contest,
   type PlatformKey,
 } from "@/lib/contestService";
 import { getContestStats, getUpcomingContests } from "@/lib/contestSchedule";
+import { getTimeZone } from "@/lib/timezoneServer";
+import { timeZoneLabel } from "@/lib/timezone";
 import Countdown from "@/app/components/Countdown";
 import NextContestPanel from "@/app/components/NextContestPanel";
 
@@ -22,7 +24,11 @@ function nowMs() {
 }
 
 export default async function Home() {
-  const [contests, stats] = await Promise.all([getUpcomingContests(), getContestStats()]);
+  const [contests, stats, timeZone] = await Promise.all([
+    getUpcomingContests(),
+    getContestStats(),
+    getTimeZone(),
+  ]);
   const now = nowMs();
   const next24h = new Date(now + 24 * 60 * 60 * 1000).getTime();
   const weekEnd = new Date(now + 7 * 24 * 60 * 60 * 1000).getTime();
@@ -37,7 +43,7 @@ export default async function Home() {
 
   const dayGroups = new Map<string, Contest[]>();
   for (const contest of week) {
-    const key = istDayKey(contest.startTime);
+    const key = dayKey(contest.startTime, timeZone);
     const list = dayGroups.get(key) ?? [];
     list.push(contest);
     dayGroups.set(key, list);
@@ -54,7 +60,7 @@ export default async function Home() {
                 The field, at a glance.
               </h1>
               <p className="mt-2 max-w-xl text-sm text-muted">
-                Live across five platforms. All times shown in IST.
+                Live across five platforms. Times in {timeZoneLabel(timeZone)}.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -74,7 +80,7 @@ export default async function Home() {
       <div className="px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
           {next ? (
-            <NextContestPanel contest={next} />
+            <NextContestPanel contest={next} timeZone={timeZone} />
           ) : (
             <div className="panel p-6">
               <p className="eyebrow">Quiet window</p>
@@ -99,7 +105,7 @@ export default async function Home() {
                     className="group flex items-center gap-3 py-3"
                   >
                     <span className="mono w-16 shrink-0 whitespace-nowrap text-[11px] tabular-nums text-muted">
-                      {formatISTTime(contest.startTime)}
+                      {formatTime(contest.startTime, timeZone)}
                     </span>
                     <span className="platform-dot" aria-hidden="true" />
                     <span className="min-w-0 flex-1">
@@ -161,7 +167,7 @@ export default async function Home() {
               <div key={day} className="grid gap-3 py-5 sm:grid-cols-[120px_1fr] sm:gap-6">
                 <div>
                   <p className="mono text-[11px] font-medium uppercase tracking-wider text-ink">
-                    {formatISTDate(items[0].startTime)}
+                    {formatDate(items[0].startTime, timeZone)}
                   </p>
                   <p className="mono mt-1 text-[10px] uppercase tracking-wider text-muted">
                     {items.length} round{items.length === 1 ? "" : "s"}
@@ -176,7 +182,7 @@ export default async function Home() {
                       className="group grid grid-cols-[64px_14px_1fr_auto] items-center gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-panel"
                     >
                       <span className="mono whitespace-nowrap text-[11px] tabular-nums text-muted">
-                        {formatISTTime(contest.startTime)}
+                        {formatTime(contest.startTime, timeZone)}
                       </span>
                       <span className="platform-dot" aria-hidden="true" />
                       <span className="min-w-0">

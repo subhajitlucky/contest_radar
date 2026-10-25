@@ -4,14 +4,16 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, Bell, CalendarDays } from "lucide-react";
 import {
   PLATFORM_META,
+  formatDate,
   formatDuration,
-  formatISTDate,
-  formatISTTime,
+  formatTime,
   getContestStatus,
   getGoogleCalendarUrl,
   type PlatformKey,
 } from "@/lib/contestService";
 import { getUpcomingContests } from "@/lib/contestSchedule";
+import { getTimeZone } from "@/lib/timezoneServer";
+import { timeZoneLabel } from "@/lib/timezone";
 import Countdown from "@/app/components/Countdown";
 import FavoriteButton from "@/app/components/FavoriteButton";
 import { contestKey } from "@/lib/favorites";
@@ -31,20 +33,21 @@ export async function generateMetadata({
   params: Promise<{ platform: string; id: string }>;
 }): Promise<Metadata> {
   const { platform, id } = await params;
-  const contest = await findContest(platform, id);
+  const [contest, timeZone] = await Promise.all([findContest(platform, id), getTimeZone()]);
 
   if (!contest) return { title: "Contest not found - ContestRadar" };
 
+  const start = `${formatDate(contest.startTime, timeZone)} at ${formatTime(
+    contest.startTime,
+    timeZone,
+  )} ${timeZoneLabel(timeZone)}`;
+
   return {
     title: `${contest.name} (${contest.platform}) - ContestRadar`,
-    description: `${contest.name} starts ${formatISTDate(contest.startTime)} at ${formatISTTime(
-      contest.startTime
-    )} IST. ${contest.platform}, ${formatDuration(contest.duration)}.`,
+    description: `${contest.name} starts ${start}. ${contest.platform}, ${formatDuration(contest.duration)}.`,
     openGraph: {
       title: `${contest.name} (${contest.platform})`,
-      description: `${formatISTDate(contest.startTime)} · ${formatISTTime(
-        contest.startTime
-      )} IST · ${formatDuration(contest.duration)}`,
+      description: `${start} · ${formatDuration(contest.duration)}`,
       type: "website",
     },
   };
@@ -56,7 +59,7 @@ export default async function ContestDetailPage({
   params: Promise<{ platform: string; id: string }>;
 }) {
   const { platform, id } = await params;
-  const contest = await findContest(platform, id);
+  const [contest, timeZone] = await Promise.all([findContest(platform, id), getTimeZone()]);
 
   if (!contest) notFound();
 
@@ -120,8 +123,11 @@ export default async function ContestDetailPage({
       <div className="grid gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_340px] lg:px-8">
         <div>
           <div className="grid grid-cols-2 gap-4 border-y border-line py-5 sm:grid-cols-4">
-            <Meta label="Date" value={formatISTDate(contest.startTime)} />
-            <Meta label="Start" value={`${formatISTTime(contest.startTime)} IST`} />
+            <Meta label="Date" value={formatDate(contest.startTime, timeZone)} />
+            <Meta
+              label="Start"
+              value={`${formatTime(contest.startTime, timeZone)} ${timeZoneLabel(timeZone)}`}
+            />
             <Meta label="Duration" value={formatDuration(contest.duration)} />
             <Meta label="Status" value={status} />
           </div>

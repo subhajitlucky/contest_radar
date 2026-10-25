@@ -1,28 +1,36 @@
 import Link from "next/link";
 import {
   PLATFORM_META,
-  formatISTDate,
-  formatISTTime,
+  formatDate,
+  formatTime,
   type PlatformKey,
 } from "@/lib/contestService";
 import { getUpcomingContests } from "@/lib/contestSchedule";
+import { getTimeZone } from "@/lib/timezoneServer";
+import { isValidTimeZone, timeZoneLabel } from "@/lib/timezone";
 
 export const revalidate = 300;
 
 export default async function EmbedCalendarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ platform?: string; theme?: string }>;
+  searchParams: Promise<{ platform?: string; theme?: string; tz?: string }>;
 }) {
   const params = await searchParams;
   const platform =
     params.platform && params.platform in PLATFORM_META
       ? (params.platform as PlatformKey)
       : null;
-  const contests = (await getUpcomingContests())
+  const [allContests, cookieTimeZone] = await Promise.all([
+    getUpcomingContests(),
+    getTimeZone(),
+  ]);
+  const contests = allContests
     .filter((contest) => !platform || contest.platformKey === platform)
     .slice(0, 8);
   const theme = params.theme === "light" ? "light" : undefined;
+  const timeZone =
+    params.tz && isValidTimeZone(params.tz) ? params.tz : cookieTimeZone;
 
   return (
     <div
@@ -64,7 +72,8 @@ export default async function EmbedCalendarPage({
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[12px] font-medium">{contest.name}</span>
                   <span className="mono block text-[9px] uppercase tracking-wider text-muted">
-                    {formatISTDate(contest.startTime)} · {formatISTTime(contest.startTime)}
+                    {formatDate(contest.startTime, timeZone)} ·{" "}
+                    {formatTime(contest.startTime, timeZone)}
                   </span>
                 </span>
                 <span className="mono shrink-0 text-[9px] text-signal">
@@ -78,7 +87,7 @@ export default async function EmbedCalendarPage({
         )}
 
         <p className="mt-3 border-t border-line pt-2 text-[9px] text-muted">
-          Times in IST · free forever · contestradar.vercel.app
+          Times in {timeZoneLabel(timeZone)} · free forever · contestradar.vercel.app
         </p>
       </div>
     </div>

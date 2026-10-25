@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  dayKey,
   formatContestDate,
+  formatDate,
   formatDuration,
   formatISTDate,
   formatISTTime,
+  formatTime,
   getContestStatus,
   getGoogleCalendarUrl,
   istDayKey,
@@ -39,6 +42,16 @@ describe("IST formatting", () => {
     expect(formatISTDate("2026-10-21T14:30:00.000Z")).toContain("21");
     expect(istDayKey("2026-10-21T14:30:00.000Z")).toBe("2026-10-21");
     expect(formatContestDate("2026-10-21T14:30:00.000Z")).toContain("IST");
+  });
+});
+
+describe("timezone formatting", () => {
+  it("formats the same instant in another timezone", () => {
+    const iso = "2026-10-21T14:30:00.000Z";
+    expect(formatTime(iso, "UTC")).toBe("2:30 PM");
+    expect(formatDate(iso, "UTC")).toContain("21");
+    expect(dayKey(iso, "UTC")).toBe("2026-10-21");
+    expect(formatContestDate(iso, "UTC")).toContain("UTC");
   });
 });
 

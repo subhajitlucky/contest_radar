@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { TimerReset } from "lucide-react";
 import { getPastContests } from "@/lib/contestService";
+import { getTimeZone } from "@/lib/timezoneServer";
 import VirtualContest from "./VirtualContest";
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function VirtualContestPage() {
-  const contests = await getPastContests(40);
+  const [contests, timeZone] = await Promise.all([getPastContests(40), getTimeZone()]);
 
   return (
     <div>
@@ -34,7 +35,7 @@ export default async function VirtualContestPage() {
 
       <section className="px-4 py-8 sm:px-6 lg:px-8">
         {contests.length > 0 ? (
-          <VirtualContest contests={contests} />
+          <VirtualContest contests={contests} timeZone={timeZone} />
         ) : (
           <div className="panel p-8 text-sm text-muted">
             Past contests are unavailable right now. Try again later.

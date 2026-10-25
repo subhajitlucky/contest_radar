@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Command } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import TimezoneSelect from "./TimezoneSelect";
 
 const TITLES: Record<string, string> = {
   "/dashboard": "Overview",
@@ -38,6 +39,9 @@ export default function TopBar() {
         </div>
 
         <div className="flex items-center gap-1.5">
+          <div className="hidden xl:block">
+            <TimezoneSelect />
+          </div>
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event("cr-command-open"))}

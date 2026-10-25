@@ -16,15 +16,16 @@ import {
 } from "lucide-react";
 import {
   PLATFORM_META,
+  dayKey,
+  formatDate,
   formatDuration,
-  formatISTDate,
-  formatISTTime,
+  formatTime,
   getContestStatus,
   getGoogleCalendarUrl,
-  istDayKey,
   type Contest,
   type PlatformKey,
 } from "@/lib/contestService";
+import { timeZoneLabel } from "@/lib/timezone";
 import ContestCard from "./ContestCard";
 import Countdown from "./Countdown";
 import FavoriteButton from "./FavoriteButton";
@@ -45,11 +46,13 @@ export default function ContestsExplorer({
   initialPlatform = "all",
   initialQuery = "",
   initialHighlight,
+  timeZone,
 }: {
   contests: Contest[];
   initialPlatform?: PlatformFilter;
   initialQuery?: string;
   initialHighlight?: string;
+  timeZone: string;
 }) {
   const [query, setQuery] = useState(initialQuery);
   const [platform, setPlatform] = useState<PlatformFilter>(initialPlatform);
@@ -118,13 +121,13 @@ export default function ContestsExplorer({
   const groups = useMemo(() => {
     const map = new Map<string, Contest[]>();
     for (const contest of upcoming) {
-      const key = istDayKey(contest.startTime);
+      const key = dayKey(contest.startTime, timeZone);
       const list = map.get(key) ?? [];
       list.push(contest);
       map.set(key, list);
     }
     return [...map.entries()];
-  }, [upcoming]);
+  }, [upcoming, timeZone]);
 
   const hasFilters = platform !== "all" || query.trim().length > 0 || savedOnly;
 
@@ -214,7 +217,7 @@ export default function ContestsExplorer({
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="mono text-[10px] uppercase tracking-[0.14em] text-muted">
-          {filtered.length} contest{filtered.length === 1 ? "" : "s"} · times in IST
+          {filtered.length} contest{filtered.length === 1 ? "" : "s"} · times in {timeZoneLabel(timeZone)}
         </p>
         <div className="flex items-center gap-3">
           {hasFilters && (
@@ -254,7 +257,7 @@ export default function ContestsExplorer({
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[13px] font-medium">{contest.name}</span>
                   <span className="mono block text-[10px] uppercase tracking-wider text-muted">
-                    {contest.platform} · ends {formatISTTime(contest.endTime)}
+                    {contest.platform} · ends {formatTime(contest.endTime, timeZone)}
                   </span>
                 </span>
                 <Countdown startTime={contest.endTime} className="mono text-[11px] text-signal" />
@@ -286,7 +289,11 @@ export default function ContestsExplorer({
       ) : view === "grid" ? (
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((contest) => (
-            <ContestCard key={`${contest.platformKey}-${contest.id}`} contest={contest} />
+            <ContestCard
+              key={`${contest.platformKey}-${contest.id}`}
+              contest={contest}
+              timeZone={timeZone}
+            />
           ))}
         </div>
       ) : (
@@ -295,7 +302,7 @@ export default function ContestsExplorer({
             <section key={day} className="grid gap-3 border-b border-line py-5 sm:grid-cols-[132px_1fr] sm:gap-6">
               <div>
                 <p className="mono text-[11px] font-medium uppercase tracking-wider">
-                  {formatISTDate(items[0].startTime)}
+                  {formatDate(items[0].startTime, timeZone)}
                 </p>
                 <p className="mono mt-1 text-[10px] uppercase tracking-wider text-muted">
                   {items.length} round{items.length === 1 ? "" : "s"}
@@ -312,7 +319,7 @@ export default function ContestsExplorer({
                     className="group grid w-full grid-cols-[64px_12px_1fr_auto_16px] items-center gap-3 px-2 py-3 text-left transition-colors hover:bg-panel"
                   >
                     <span className="mono whitespace-nowrap text-[11px] tabular-nums text-muted">
-                      {formatISTTime(contest.startTime)}
+                      {formatTime(contest.startTime, timeZone)}
                     </span>
                     <span className="platform-dot" aria-hidden="true" />
                     <span className="min-w-0">
@@ -378,8 +385,11 @@ export default function ContestsExplorer({
             </div>
 
             <dl className="mt-6 divide-y divide-line border-y border-line">
-              <DetailRow label="Date" value={formatISTDate(selected.startTime)} />
-              <DetailRow label="Start" value={`${formatISTTime(selected.startTime)} IST`} />
+              <DetailRow label="Date" value={formatDate(selected.startTime, timeZone)} />
+              <DetailRow
+                label="Start"
+                value={`${formatTime(selected.startTime, timeZone)} ${timeZoneLabel(timeZone)}`}
+              />
               <DetailRow label="Duration" value={formatDuration(selected.duration)} />
               <DetailRow label="Status" value={getContestStatus(selected.startTime, selected.endTime)} />
             </dl>

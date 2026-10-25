@@ -2,9 +2,9 @@ import Link from "next/link";
 import { ArrowUpRight, Bell, CalendarDays } from "lucide-react";
 import type { Contest } from "@/lib/contestService";
 import {
+  formatDate,
   formatDuration,
-  formatISTDate,
-  formatISTTime,
+  formatTime,
   getContestStatus,
   getGoogleCalendarUrl,
 } from "@/lib/contestService";
@@ -14,9 +14,11 @@ import { contestKey } from "@/lib/favorites";
 
 export default function ContestCard({
   contest,
+  timeZone,
   className = "",
 }: {
   contest: Contest;
+  timeZone: string;
   className?: string;
 }) {
   const status = getContestStatus(contest.startTime, contest.endTime);
@@ -48,7 +50,7 @@ export default function ContestCard({
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted">
         <span className="inline-flex items-center gap-1.5">
           <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
-          {formatISTDate(contest.startTime)} · {formatISTTime(contest.startTime)}
+          {formatDate(contest.startTime, timeZone)} · {formatTime(contest.startTime, timeZone)}
         </span>
         <span className="h-1 w-1 rounded-full bg-line" aria-hidden="true" />
         <span>{formatDuration(contest.duration)}</span>

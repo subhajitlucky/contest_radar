@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { ArrowUpRight, Pause, Play, RotateCcw, Square } from "lucide-react";
 import type { Contest } from "@/lib/contestService";
-import { formatISTDate } from "@/lib/contestService";
+import { formatDate } from "@/lib/contestService";
 
 const SESSIONS_KEY = "cr-virtual:v1";
 const SESSIONS_EVENT = "cr-virtual-updated";
@@ -49,7 +49,13 @@ function formatClock(totalSeconds: number): string {
   return [hours, minutes, seconds].map((value) => String(value).padStart(2, "0")).join(":");
 }
 
-export default function VirtualContest({ contests }: { contests: Contest[] }) {
+export default function VirtualContest({
+  contests,
+  timeZone,
+}: {
+  contests: Contest[];
+  timeZone: string;
+}) {
   const [selectedId, setSelectedId] = useState(String(contests[0]?.id ?? ""));
   const [duration, setDuration] = useState(contests[0]?.duration ?? 120);
   const [phase, setPhase] = useState<"idle" | "running" | "paused" | "done">("idle");
@@ -134,7 +140,7 @@ export default function VirtualContest({ contests }: { contests: Contest[] }) {
               >
                 {contests.map((item) => (
                   <option key={item.id} value={String(item.id)}>
-                    {item.name} · {formatISTDate(item.startTime)}
+                    {item.name} · {formatDate(item.startTime, timeZone)}
                   </option>
                 ))}
               </select>

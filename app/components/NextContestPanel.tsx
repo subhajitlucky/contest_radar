@@ -2,14 +2,21 @@ import Link from "next/link";
 import { ArrowUpRight, Bell, CalendarDays } from "lucide-react";
 import type { Contest } from "@/lib/contestService";
 import {
+  formatDate,
   formatDuration,
-  formatISTDate,
-  formatISTTime,
+  formatTime,
   getGoogleCalendarUrl,
 } from "@/lib/contestService";
+import { timeZoneLabel } from "@/lib/timezone";
 import Countdown from "./Countdown";
 
-export default function NextContestPanel({ contest }: { contest: Contest }) {
+export default function NextContestPanel({
+  contest,
+  timeZone,
+}: {
+  contest: Contest;
+  timeZone: string;
+}) {
   return (
     <section className="panel min-w-0 p-6 sm:p-7" data-platform={contest.platformKey} aria-label="Next contest">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -25,8 +32,11 @@ export default function NextContestPanel({ contest }: { contest: Contest }) {
       </h2>
 
       <div className="mt-6 grid grid-cols-2 gap-4 border-t border-line pt-5 sm:grid-cols-4">
-        <Meta label="Date" value={formatISTDate(contest.startTime)} />
-        <Meta label="Start" value={`${formatISTTime(contest.startTime)} IST`} />
+        <Meta label="Date" value={formatDate(contest.startTime, timeZone)} />
+        <Meta
+          label="Start"
+          value={`${formatTime(contest.startTime, timeZone)} ${timeZoneLabel(timeZone)}`}
+        />
         <Meta label="Duration" value={formatDuration(contest.duration)} />
         <Meta label="Platform" value={contest.platform} />
       </div>

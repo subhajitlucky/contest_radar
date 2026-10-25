@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import ThemeToggle from "../ThemeToggle";
+import TimezoneSelect from "../TimezoneSelect";
 
 const LINKS = [
   { href: "/contests", label: "Contests" },
@@ -59,6 +60,9 @@ export default function PublicHeader({ signedIn }: { signedIn: boolean }) {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden xl:block">
+            <TimezoneSelect />
+          </div>
           <ThemeToggle />
           <Link href={cta.href} className="btn btn-signal btn-sm">
             {cta.label}
@@ -99,6 +103,9 @@ export default function PublicHeader({ signedIn }: { signedIn: boolean }) {
                 {link.label}
               </Link>
             ))}
+            <div className="px-3 py-2">
+              <TimezoneSelect />
+            </div>
             <Link href={cta.href} onClick={() => setOpen(false)} className="btn btn-signal mt-2">
               {cta.label}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
