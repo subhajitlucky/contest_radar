@@ -121,6 +121,19 @@ export async function readContestsFromDb(): Promise<Contest[]> {
   return result.rows.map(toContest);
 }
 
+export async function readLastRefresh(): Promise<string | null> {
+  if (!isDatabaseConfigured()) {
+    return null;
+  }
+
+  const result = await getPool().query<{ last_success_at: Date | null }>(
+    "SELECT MAX(last_success_at) AS last_success_at FROM source_health",
+  );
+
+  const value = result.rows[0]?.last_success_at;
+  return value ? new Date(value).toISOString() : null;
+}
+
 export async function readSourceHealth(): Promise<SourceHealth[]> {
   if (!isDatabaseConfigured()) {
     return [];

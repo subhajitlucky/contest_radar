@@ -112,6 +112,8 @@ When `DATABASE_URL` is set:
   records snapshot changes, and updates source health.
 - Pages read the stored schedule first and fall back to live adapters if the database
   is empty or unavailable.
+- If the stored schedule is older than 15 minutes, the next request schedules a
+  background refresh; a Postgres advisory lock prevents duplicate refreshes.
 - `/api/source-health` returns per-source last success, last error, latency, and
   consecutive failures.
 - `.github/workflows/contests.yml` triggers the refresh every 15 minutes.
