@@ -29,7 +29,7 @@ export default function PublicHeader({ signedIn }: { signedIn: boolean }) {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-background/90 backdrop-blur">
       <div className="shell flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-3" aria-label="ContestRadar home">
+        <Link href="/" className="flex items-center gap-3">
           <span className="flex h-8 w-8 items-center justify-center border border-ink">
             <span className="h-1.5 w-1.5 bg-signal" />
           </span>
