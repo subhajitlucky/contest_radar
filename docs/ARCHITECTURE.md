@@ -130,7 +130,7 @@ GitHub Actions triggers the route every five minutes.
 - Five consecutive failures open a 15-minute circuit for that source.
 - A stale schedule triggers one background refresh after the next request; an advisory lock prevents duplicate refreshes.
 - Snapshots older than 180 days and inactive contests older than 90 days are removed by the refresh cron.
-- `/api/health` fails when any source is stale beyond one hour or has three consecutive failures; a 30-minute GitHub Actions check watches it.
+- `/api/health` fails when any source is stale beyond one hour or has three consecutive failures; a 30-minute GitHub Actions check warms the schedule and retries the health check.
 - Alert delivery is idempotent.
 - Push endpoints returning 404/410 are removed.
 - Auth lookups fail closed.
