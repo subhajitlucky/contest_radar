@@ -41,8 +41,8 @@ function sourceState(source: SourceHealth): SourceState {
   if (!source.lastSuccessAt) return "down";
 
   const age = Date.now() - new Date(source.lastSuccessAt).getTime();
-  if (source.consecutiveFailures >= 3 || age > 2 * 60 * 60 * 1000) return "down";
-  if (source.consecutiveFailures > 0 || age > 30 * 60 * 1000) return "degraded";
+  if (source.consecutiveFailures >= 3 || age > 3 * 60 * 60 * 1000) return "down";
+  if (source.consecutiveFailures > 0 || age > 60 * 60 * 1000) return "degraded";
   return "operational";
 }
 
