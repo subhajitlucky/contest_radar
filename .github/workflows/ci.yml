@@ -32,3 +32,69 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  e2e:
+    name: Browser E2E
+    runs-on: ubuntu-latest
+    needs: verify
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: contest_radar
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/contest_radar
+      DATABASE_SSL: disable
+      NEXT_TELEMETRY_DISABLED: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Migrate
+        run: npm run db:migrate
+
+      - name: Seed E2E data
+        run: psql "$DATABASE_URL" -f e2e/seed.sql
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E
+        run: npm run test:e2e
+        env:
+          PLAYWRIGHT_WEB_SERVER_COMMAND: npm run start
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7

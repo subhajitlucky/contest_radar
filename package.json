@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "db:migrate": "node scripts/migrate.mjs"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22.20.5",
     "@types/pg": "^8.23.1",

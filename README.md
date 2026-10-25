@@ -58,8 +58,23 @@ Open http://localhost:3000.
 
 ```bash
 npm run lint
+npm run test
 npm run build
 ```
+
+Browser E2E tests use Playwright against a migrated and seeded database:
+
+```bash
+npx playwright install chromium
+npm run db:migrate
+psql "$DATABASE_URL" -f e2e/seed.sql
+npm run build
+PLAYWRIGHT_WEB_SERVER_COMMAND="npm run start" npm run test:e2e
+```
+
+The suite covers public routes, timezone selection, embed overrides, health,
+schedule reads, origin checks, rate limits, and auth gating. CI runs it against
+a Postgres service.
 
 ## Environment
 
