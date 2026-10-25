@@ -248,6 +248,20 @@ export async function syncContestsForSource(
   }
 }
 
+export async function cleanupContestHistory(): Promise<void> {
+  if (!isDatabaseConfigured()) {
+    return;
+  }
+
+  const pool = getPool();
+  await pool.query(
+    "DELETE FROM contest_snapshots WHERE snapshot_at < NOW() - INTERVAL '180 days'",
+  );
+  await pool.query(
+    "DELETE FROM contests WHERE is_active = FALSE AND end_time < NOW() - INTERVAL '90 days'",
+  );
+}
+
 export async function recordSourceSuccess(
   source: PlatformKey,
   latencyMs: number,

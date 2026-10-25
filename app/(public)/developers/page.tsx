@@ -80,6 +80,27 @@ const ENDPOINTS = [
   },
   {
     method: "GET",
+    path: "/api/health",
+    description:
+      "Aggregate health: DB reachability, stale sources, consecutive failures, and last refresh. Returns 503 when degraded.",
+    sample: `{
+  "ok": true,
+  "status": "ok",
+  "lastRefresh": "2026-10-25T06:39:01.000Z",
+  "stale": [],
+  "failing": [],
+  "sources": [
+    {
+      "source": "codeforces",
+      "lastSuccessAt": "2026-10-25T06:39:01.000Z",
+      "latencyMs": 168,
+      "consecutiveFailures": 0
+    }
+  ]
+}`,
+  },
+  {
+    method: "GET",
     path: "/api/rating?handle=tourist",
     description:
       "Codeforces profile, max rating, contest count, best rank, and up to 30 rating changes.",

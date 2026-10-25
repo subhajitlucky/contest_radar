@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cleanupContestHistory } from "@/lib/contestStore";
 import { refreshContests } from "@/lib/contestSchedule";
 import { isDatabaseConfigured } from "@/lib/db";
 import { cleanupRateLimits } from "@/lib/rateLimit";
@@ -31,8 +32,9 @@ export async function GET(request: NextRequest) {
 
   try {
     await cleanupRateLimits();
+    await cleanupContestHistory();
   } catch (error) {
-    console.error("[cron/refresh-contests] rate-limit cleanup failed:", error);
+    console.error("[cron/refresh-contests] cleanup failed:", error);
   }
 
   return NextResponse.json({

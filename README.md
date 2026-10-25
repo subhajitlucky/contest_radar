@@ -17,6 +17,7 @@ feeds, a Telegram bot, and no paywalls.
 - Telegram bot: `/upcoming`, `/platforms`, `/subscribe`, `/status`, `/unsubscribe`.
 - Contest detail data via `/api/contests/[id]`, stats via `/api/stats`.
 - Source health at `/status` with last success, latency, failures, and last refresh.
+- Aggregate `/api/health` check plus a 30-minute GitHub Actions health workflow.
 - Light/dark styling, sitemap, robots, and a responsive layout.
 
 ## Public site and dashboard
