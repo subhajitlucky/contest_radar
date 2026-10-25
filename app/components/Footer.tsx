@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { PLATFORM_META, type PlatformKey } from "@/lib/contestService";
+import TimezoneSelect from "./TimezoneSelect";
 
 const PRODUCT = [
   { href: "/contests", label: "All contests" },
@@ -65,9 +66,15 @@ export default function Footer({ mobileNav = true }: { mobileNav?: boolean }) {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-2 border-t border-line pt-5 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-4 border-t border-line pt-5 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>Data from official and normalized platform APIs.</p>
-          <p className="mono text-[10px] uppercase tracking-[0.14em]">Signal over noise</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="mono text-[10px] uppercase tracking-[0.14em]">Time zone</span>
+            <TimezoneSelect />
+            <span className="mono text-[10px] uppercase tracking-[0.14em]">
+              Signal over noise
+            </span>
+          </div>
         </div>
       </div>
     </footer>
