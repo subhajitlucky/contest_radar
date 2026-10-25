@@ -42,7 +42,7 @@ export default function TopBar() {
             type="button"
             onClick={() => window.dispatchEvent(new Event("cr-command-open"))}
             className="flex h-8 items-center gap-1.5 rounded-md border border-line px-2.5 text-[11px] text-muted transition-colors hover:border-ink/25 hover:text-ink"
-            aria-label="Open command palette"
+            aria-label="⌘K: open command palette"
           >
             <Command className="h-3.5 w-3.5" aria-hidden="true" />
             <span className="mono hidden sm:inline">⌘K</span>

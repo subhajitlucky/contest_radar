@@ -157,7 +157,7 @@ export default function Sidebar({ nextContest }: { nextContest: Contest | null }
             type="button"
             onClick={() => window.dispatchEvent(new Event("cr-command-open"))}
             className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-[11px] text-muted hover:bg-panel-2 hover:text-ink"
-            aria-label="Open command palette"
+            aria-label="⌘K: open command palette"
           >
             <Command className="h-3.5 w-3.5" aria-hidden="true" />
             <span className="mono">⌘K</span>
