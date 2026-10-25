@@ -51,7 +51,8 @@ The site uses two route groups with different shells:
 
 - **Public** (`app/(public)`) — public header and footer, no sidebar. Routes:
   `/`, `/contests`, `/contests/[platform]/[id]`, `/practice`, `/alerts`,
-  `/leaderboard`, `/about`, `/developers`, `/support`, `/privacy`, and `/login`.
+  `/leaderboard`, `/about`, `/developers`, `/status`, `/support`, `/privacy`,
+  and `/login`.
 - **App** (`app/(app)`) — sidebar, top bar, mobile navigation, and an auth gate.
   Routes: `/dashboard` (the command center) and `/profile`.
 
@@ -124,6 +125,7 @@ GitHub Actions triggers the route every five minutes.
 ## Reliability
 
 - Adapter failures are isolated.
+- Adapter fetches use timeouts, bounded retries, `Retry-After`, and exponential backoff.
 - Alert delivery is idempotent.
 - Push endpoints returning 404/410 are removed.
 - Auth lookups fail closed.

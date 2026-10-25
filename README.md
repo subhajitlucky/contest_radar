@@ -16,13 +16,14 @@ feeds, a Telegram bot, and no paywalls.
 - Google Calendar links per contest and `.ics` feeds for all or one platform.
 - Telegram bot: `/upcoming`, `/platforms`, `/subscribe`, `/status`, `/unsubscribe`.
 - Contest detail data via `/api/contests/[id]`, stats via `/api/stats`.
+- Source health at `/status` with last success, latency, failures, and last refresh.
 - Light/dark styling, sitemap, robots, and a responsive layout.
 
 ## Public site and dashboard
 
 - **Public** — `/` (homepage), `/contests`, `/practice`, `/alerts`,
-  `/leaderboard`, `/about`, `/developers`, `/support`, `/privacy`, `/login`.
-  These use the public header and footer.
+  `/leaderboard`, `/about`, `/developers`, `/status`, `/support`, `/privacy`,
+  `/login`. These use the public header and footer.
 - **Signed in** — `/dashboard` and `/profile` require an account and use the app
   shell (sidebar, top bar, mobile navigation).
 

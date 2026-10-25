@@ -13,6 +13,7 @@ const PRODUCT = [
 const PROJECT = [
   { href: "/developers", label: "Developers" },
   { href: "/about", label: "About" },
+  { href: "/status", label: "Status" },
   { href: "/support", label: "Support" },
   { href: "/privacy", label: "Privacy" },
 ];

@@ -23,6 +23,9 @@ export default async function LoginPage({
       : params.error
         ? "That sign-in link is invalid."
         : null;
+  const emailConfigured = Boolean(
+    process.env.RESEND_API_KEY && process.env.ALERT_FROM_EMAIL,
+  );
 
   return (
     <div>
@@ -57,6 +60,17 @@ export default async function LoginPage({
                   </button>
                 </form>
               </div>
+            </div>
+          ) : !emailConfigured ? (
+            <div className="space-y-3">
+              <p className="text-sm font-medium">Email sign-in is not configured yet.</p>
+              <p className="text-xs leading-relaxed text-muted">
+                An administrator needs to set <code>RESEND_API_KEY</code> and{" "}
+                <code>ALERT_FROM_EMAIL</code> before magic links can be sent.
+              </p>
+              <Link href="/contests" className="btn btn-outline btn-sm">
+                Browse the schedule
+              </Link>
             </div>
           ) : (
             <>

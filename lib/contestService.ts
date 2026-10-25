@@ -4,6 +4,7 @@ import {
   type PlatformKey,
   type PlatformName,
 } from "./contestTypes";
+import { fetchWithRetry } from "./fetchWithRetry";
 
 export { PLATFORM_META } from "./contestTypes";
 export type { Contest, PlatformKey, PlatformName, PlatformStats } from "./contestTypes";
@@ -112,7 +113,7 @@ function transformCodeforces(apiContest: CodeforcesContestAPI): Contest | null {
 }
 
 async function fetchCodeforces(): Promise<Contest[]> {
-  const response = await fetch("https://codeforces.com/api/contest.list?gym=false", {
+  const response = await fetchWithRetry("https://codeforces.com/api/contest.list?gym=false", {
     next: { revalidate: 300 },
     headers: { "User-Agent": "ContestRadar/1.0" },
   });
@@ -139,7 +140,7 @@ interface LeetCodeContest {
 }
 
 async function fetchLeetCode(): Promise<Contest[]> {
-  const response = await fetch("https://leetcode.com/graphql", {
+  const response = await fetchWithRetry("https://leetcode.com/graphql", {
     method: "POST",
     next: { revalidate: 300 },
     headers: {
@@ -196,7 +197,7 @@ interface CodeChefContest {
 }
 
 async function fetchCodeChef(): Promise<Contest[]> {
-  const response = await fetch(
+  const response = await fetchWithRetry(
     "https://www.codechef.com/api/list/contests/all?sort_by=START&sorting_order=asc&offset=0&limit=30",
     {
       next: { revalidate: 300 },
@@ -259,7 +260,7 @@ function atCoderType(id: string): string {
 }
 
 async function fetchAtCoderJson(): Promise<Contest[]> {
-  const response = await fetch("https://kenkoooo.com/atcoder/resources/contests.json", {
+  const response = await fetchWithRetry("https://kenkoooo.com/atcoder/resources/contests.json", {
     next: { revalidate: 3600 },
     headers: { "User-Agent": "ContestRadar/1.0" },
   });
@@ -312,7 +313,7 @@ function decodeHtml(value: string): string {
 }
 
 async function fetchAtCoderHtml(): Promise<Contest[]> {
-  const response = await fetch("https://atcoder.jp/contests/", {
+  const response = await fetchWithRetry("https://atcoder.jp/contests/", {
     next: { revalidate: 1800 },
     headers: { "User-Agent": "ContestRadar/1.0" },
   });
@@ -380,7 +381,7 @@ interface HackerRankContest {
 }
 
 async function fetchHackerRank(): Promise<Contest[]> {
-  const response = await fetch(
+  const response = await fetchWithRetry(
     "https://www.hackerrank.com/rest/contests/upcoming?limit=25&offset=0",
     {
       next: { revalidate: 300 },
@@ -629,7 +630,7 @@ function getFallbackData(): Contest[] {
 
 export async function getGymContests(): Promise<Contest[]> {
   try {
-    const response = await fetch("https://codeforces.com/api/contest.list?gym=true", {
+    const response = await fetchWithRetry("https://codeforces.com/api/contest.list?gym=true", {
       next: { revalidate: 3600 },
       headers: { "User-Agent": "ContestRadar/1.0" },
     });
@@ -649,7 +650,7 @@ export async function getGymContests(): Promise<Contest[]> {
 
 export async function getPastContests(limit = 30): Promise<Contest[]> {
   try {
-    const response = await fetch("https://codeforces.com/api/contest.list?gym=false", {
+    const response = await fetchWithRetry("https://codeforces.com/api/contest.list?gym=false", {
       next: { revalidate: 3600 },
       headers: { "User-Agent": "ContestRadar/1.0" },
     });
