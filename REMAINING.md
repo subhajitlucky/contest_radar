@@ -1,7 +1,20 @@
 # Contest Radar — What Remains
 
-Status snapshot: **20 of 20 planned features implemented**. The browser extension is
-built and packaged; only Chrome Web Store submission remains.
+Status snapshot (2026-10-25): **production-ready core**. The public site, private
+dashboard, alerts, DB-first schedule, health checks, rate limits, migrations,
+timezone selection, and browser E2E suite are shipped. Remaining work is mostly
+external credentials and optional depth; historical notes are retained below.
+
+## Current open items (2026-10-25)
+
+- **Blocked:** email login and email alerts need `RESEND_API_KEY` and
+  `ALERT_FROM_EMAIL`.
+- **Blocked:** Telegram, Discord, and push delivery need provider credentials.
+- **Open:** isolate Preview/Development with Neon branches or a separate database.
+- **Open:** strict CSP with nonces; production still needs `unsafe-inline` for Next
+  hydration.
+- **Open:** dynamic OG images, performance budget, PWA/offline, and legal attribution.
+- **Open:** Chrome Web Store publication for the extension.
 
 ## Shipped
 
@@ -30,23 +43,30 @@ built and packaged; only Chrome Web Store submission remains.
 
 ## Platform improvements
 
-- **Tests:** add unit tests for adapters, date/time helpers, ICS generation, and alert delivery.
-- **Reliability:** AtCoder HTML can return 429; add source health, backoff, and circuit-breaker
-  behavior. Serve last-known snapshots when a source fails.
-- **SEO:** dynamic OG images; keep JSON-LD and sitemap in sync with detail pages.
-- **Observability:** error monitoring and alert-delivery failure reporting.
-- **Accessibility:** WCAG 2.2 AA audit, drawer focus trap, reduced-motion checks.
-- **Performance:** Lighthouse budget and route-level bundle review.
-- **PWA/offline:** manifest, service worker, and offline last-known schedule.
-- **Legal/attribution:** review every platform's API terms and publish attribution/privacy copy.
+- **Tests:** [x] 49 unit tests across adapters, date/time helpers, ICS, alerts, rate
+  limits, and circuit breaking; [x] 15 Playwright browser/API E2E tests in CI.
+- **Reliability:** [x] source health, retry/backoff, circuit breaker, last-known
+  snapshots, self-healing stale refreshes, advisory lock, and retention cleanup.
+- **SEO:** [x] JSON-LD and sitemap; [ ] dynamic OG images.
+- **Observability:** [x] `/api/health`, `/status`, and a 30-minute health workflow;
+  external error monitoring remains optional.
+- **Accessibility:** [x] WCAG 2.2 AA audit with 0 axe violations on public and
+  signed-in pages, including drawer and timezone controls.
+- **Performance:** [ ] Lighthouse budget and route-level bundle review.
+- **PWA/offline:** [ ] manifest, offline last-known schedule, and install prompts.
+- **Legal/attribution:** [ ] review every platform's API terms and publish
+  attribution/privacy copy.
 
 ## Critical path
 
-1. **Extension publish** (F20) needs icons, store assets, privacy copy, and a Chrome Web
-   Store account.
-2. Optional depth: judged mock contests, college leaderboards, server-side contest history.
+1. Add `RESEND_API_KEY` and `ALERT_FROM_EMAIL`, redeploy, and verify magic-link login.
+2. Add Telegram, Discord, and VAPID credentials if those channels are launching.
+3. Create a Neon preview branch and point the Preview environment at it.
+4. **Extension publish** (F20) needs icons, store assets, privacy copy, and a Chrome
+   Web Store account.
 
 ## Next batch
 
-Publish the extension, then focus on reliability, tests, accessibility, and source-health
-dashboards rather than adding surface area.
+Finish the credential-backed paths, isolate preview data, then publish the extension.
+After that, focus on dynamic OG images, a performance budget, and offline support rather
+than adding surface area.

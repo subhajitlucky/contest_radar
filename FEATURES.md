@@ -1,8 +1,9 @@
 # Contest Radar — Feature & Improvement Roadmap
 
-> Working backlog for Contest Radar. Every item below was verified absent from the
-> current code on 2026-10-20. The repository is Codeforces-only today; the roadmap
-> turns it into a free, multi-platform contest radar with real alerts.
+> **Historical roadmap (2026-10-20).** Every item below was written against the
+> Codeforces-only codebase. The app now ships five platforms, alerts, accounts,
+> health checks, rate limits, timezone selection, and E2E tests. See `README.md`
+> and `REMAINING.md` for the current shipped state and open work.
 
 ## Positioning
 
@@ -15,7 +16,7 @@ then every other platform."
 Pair with **CSCosmos** for learning: Contest Radar handles compete/practice logistics;
 CSCosmos handles explanations and interview prep.
 
-## Current state (verified)
+## State when this roadmap was written (2026-10-20)
 
 - Next.js 16 App Router, React 19, TypeScript, Tailwind.
 - Routes: `/`, `/contests`, `/practice`, `/about`, `/subscribe`.
